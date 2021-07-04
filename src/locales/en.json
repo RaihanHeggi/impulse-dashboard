@@ -1,0 +1,78 @@
+{
+  "navbar": {
+    "dropdown": {
+      "roles": {
+        "text": "Available Roles"
+      },
+      "notification": {
+        "text": "Notifications",
+        "subtext": "View All",
+        "order": {
+          "title": "Your order is placed",
+          "text": "If several languages coalesce the grammar",
+          "time": "3 min ago"
+        },
+        "james": {
+          "title": "James Lemire",
+          "text": "It will seem like simplified English.",
+          "time": "1 hours ago"
+        },
+        "item": {
+          "title": "Your item is shipped",
+          "text": "If several languages coalesce the grammar",
+          "time": "3 min ago"
+        },
+        "salena": {
+          "title": "Salena Layfield",
+          "text": "As a skeptical Cambridge friend of mine occidental.",
+          "time": "1 hours ago"
+        },
+        "button": "Load More.."
+      }
+    }
+  },
+  "menuitems": {
+    "menu": {
+      "text": "Menu"
+    },
+    "dashboard": {
+      "text": "Dashboard"
+    },
+    "laboran": {
+      "text": "Laboran",
+      "list": {
+        "student": "Student Data",
+        "studentclass": "Student Class Data",
+        "staff": "Staff Data",
+        "course": "Course Data",
+        "classroom": "Classroom Data"
+      }
+    },
+    "staff": {
+      "text": "Staff"
+    },
+    "aslab": {
+      "text": "Asisten Lab",
+      "list":{
+        "jadwal": "Jadwal",
+        "kalender": "Kalender",
+        "inputjadwal":"Input Jadwal"
+      }
+    },
+    "asprak": {
+      "text": "Asisten Praktikum",
+      "list": {
+        "praktikum": "Praktikum"
+      }
+    },
+    "praktikan": {
+      "text": "Praktikan",
+      "list": {
+        "jadwal": "Jadwal",
+        "nilai": "Nilai",
+        "kalender": "Kalender",
+        "matakuliah":"Mata Kuliah"
+      }
+    }
+  }
+}
