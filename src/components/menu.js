@@ -215,6 +215,30 @@ export const asprakItems = [
         label: "menuitems.asprak.text",
         isTitle: true
     },
+    {
+        id: 4,
+        label: 'menuitems.asprak.list.input-soal',
+        icon: 'ri-profile-line',
+        subItems: [
+            {
+                id: 5,
+                label: 'menuitems.asprak.list.input-jurnal',
+                link: 'asprak-input-jurnal'
+            },
+        ]
+    },
+    {
+        id: 6,
+        label: 'menuitems.asprak.list.lihat-feedback',
+        icon: 'ri-chat-1-line',
+        link: 'asprak-lihat-feedback'
+    },
+    {
+        id: 7,
+        label: 'menuitems.asprak.list.absensi-asprak',
+        icon: 'ri-account-circle-line',
+        link: 'asprak-absensi-asprak'
+    },
 ]
 
 export const praktikanItems = [
@@ -257,4 +281,34 @@ export const praktikanItems = [
         icon: 'ri-bar-chart-grouped-fill',
         link: 'praktikan-nilai'
     },
+    // {
+    //     id: 8,
+    //     label: 'menuitems.praktikan.list.praktikum',
+    //     icon: ' ri-suitcase-line',
+    //     subItems: [
+    //         {
+    //             id: 9,
+    //             label: 'menuitems.praktikan.list.jurnal',
+    //             icon: 'ri-checkbox-blank-circle-line',
+    //             link: 'praktikan-jurnal'
+    //         },
+    //         {
+    //             id: 10,
+    //             label: 'menuitems.praktikan.list.tes_awal',
+    //             link: 'praktikan-tes_awal'
+    //         },
+    //         {
+    //             id: 11,
+    //             label: 'menuitems.praktikan.list.tes_akhir',
+    //             link: 'praktikan-tes_akhir'
+    //         }
+    //     ]
+    // },
+    {
+        id: 12,
+        label: 'menuitems.praktikan.list.pengaturan',
+        icon: 'ri-settings-2-line',
+        link: 'praktikan-pengaturan'
+    },
+    
 ]
