@@ -71,7 +71,7 @@ export const laboranItems = [
     },
     {
         id: 3,
-        label: "menuitems.laboran.text",
+        label: "menuitems.laboran.combined-data",
         isTitle: true
     },
     {
@@ -82,27 +82,49 @@ export const laboranItems = [
     },
     {
         id: 5,
+        label: 'menuitems.laboran.list.class-course',
+        icon: 'mdi mdi-school',
+        link: 'laboran-classcourse'
+    },
+    {
+        id: 6,
+        label: "menuitems.laboran.main-data",
+        isTitle: true
+    },
+    {
+        id: 7,
         label: 'menuitems.laboran.list.student',
         icon: 'ri-team-fill',
         link: 'laboran-student'
     },
     {
-        id: 6,
-        label: 'menuitems.laboran.list.classroom',
-        icon: 'ri-home-6-line',
-        link: 'laboran-classroom'
-    },
-    {
-        id: 7,
+        id: 8,
         label: 'menuitems.laboran.list.staff',
         icon: 'ri-group-fill',
         link: 'laboran-staff'
     },
     {
-        id: 8,
+        id: 9,
+        label: 'menuitems.laboran.list.classroom',
+        icon: 'ri-home-6-line',
+        link: 'laboran-classroom'
+    },
+    {
+        id: 10,
         label: 'menuitems.laboran.list.course',
         icon: 'mdi mdi-book-open-page-variant',
         link: 'laboran-course'
+    },
+    {
+        id: 11,
+        label: "menuitems.laboran.temp",
+        isTitle: true
+    },
+    {
+        id: 12,
+        label: 'menuitems.laboran.list.create-test',
+        icon: 'ri-file-edit-line',
+        link: 'create-test'
     },
     
 ]
@@ -121,14 +143,9 @@ export const staffItems = [
     },
     {
         id: 3,
-        label: "menuitems.staff.text",
+        label: "menuitems.laboran.combined-data",
         isTitle: true
     },
-    // {
-    //     id: 4,
-    //     label: "menuitems.laboran.text",
-    //     isTitle: true
-    // },
     {
         id: 4,
         label: 'menuitems.laboran.list.studentclass',
@@ -137,27 +154,49 @@ export const staffItems = [
     },
     {
         id: 5,
+        label: 'menuitems.laboran.list.class-course',
+        icon: 'mdi mdi-school',
+        link: 'laboran-classcourse'
+    },
+    {
+        id: 6,
+        label: "menuitems.laboran.main-data",
+        isTitle: true
+    },
+    {
+        id: 7,
         label: 'menuitems.laboran.list.student',
         icon: 'ri-team-fill',
         link: 'laboran-student'
     },
     {
-        id: 6,
-        label: 'menuitems.laboran.list.classroom',
-        icon: 'ri-home-6-line',
-        link: 'laboran-classroom'
-    },
-    {
-        id: 7,
+        id: 8,
         label: 'menuitems.laboran.list.staff',
         icon: 'ri-group-fill',
         link: 'laboran-staff'
     },
     {
-        id: 8,
+        id: 9,
+        label: 'menuitems.laboran.list.classroom',
+        icon: 'ri-home-6-line',
+        link: 'laboran-classroom'
+    },
+    {
+        id: 10,
         label: 'menuitems.laboran.list.course',
         icon: 'mdi mdi-book-open-page-variant',
         link: 'laboran-course'
+    },
+    {
+        id: 11,
+        label: "menuitems.laboran.temp",
+        isTitle: true
+    },
+    {
+        id: 12,
+        label: 'menuitems.laboran.list.create-test',
+        icon: 'ri-file-edit-line',
+        link: 'create-test'
     },
     
 ]
@@ -218,14 +257,14 @@ export const asprakItems = [
     {
         id: 4,
         label: 'menuitems.asprak.list.input-soal',
-        icon: 'ri-profile-line',
-        subItems: [
-            {
-                id: 5,
-                label: 'menuitems.asprak.list.input-jurnal',
-                link: 'asprak-input-jurnal'
-            },
-        ]
+        link: 'asprak-input-soal',
+        icon: 'ri-profile-line'
+    },
+    {
+        id: 5,
+        label: 'menuitems.asprak.list.absensi-asprak',
+        icon: 'ri-account-circle-line',
+        link: 'asprak-absensi-asprak'
     },
     {
         id: 6,
@@ -233,12 +272,7 @@ export const asprakItems = [
         icon: 'ri-chat-1-line',
         link: 'asprak-lihat-feedback'
     },
-    {
-        id: 7,
-        label: 'menuitems.asprak.list.absensi-asprak',
-        icon: 'ri-account-circle-line',
-        link: 'asprak-absensi-asprak'
-    },
+    
 ]
 
 export const praktikanItems = [
