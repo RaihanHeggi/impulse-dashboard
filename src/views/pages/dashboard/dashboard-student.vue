@@ -14,7 +14,11 @@ export default {
 <template>
   <div class="card">
     <div class="card-body">
+<<<<<<< HEAD
         Dashboard Student
+=======
+        Dashboard Praktikan
+>>>>>>> parent of 4ae1c6e (26/07/2021)
     </div>
   </div>
 </template>

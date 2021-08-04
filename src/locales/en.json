@@ -40,17 +40,12 @@
     },
     "laboran": {
       "text": "Laboran",
-      "main-data": "Main Data",
-      "combined-data": "Combined Data",
-      "temp": "Temp",
       "list": {
         "student": "Student Data",
-        "studentclass": "Student Class",
+        "studentclass": "Student Class Data",
         "staff": "Staff Data",
         "course": "Course Data",
-        "classroom": "Classroom Data",
-        "class-course": "Class Course",
-        "create-test": "Create Test"
+        "classroom": "Classroom Data"
       }
     },
     "staff": {

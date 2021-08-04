@@ -67,14 +67,13 @@ export default [
         component: () => import('../views/pages/dashboard/index')
     },
 
-    //laboran
     {
         path: '/laboran/student-class',
         name: 'laboran-studentclass',
         meta: {
             authRequired: true,
         },
-        component: () => import('../views/pages/laboran/student-class/student-class')
+        component: () => import('../views/pages/laboran/student-class')
     },
     {
         path: '/laboran/student',
@@ -82,7 +81,7 @@ export default [
         meta: {
             authRequired: true,
         },
-        component: () => import('../views/pages/laboran/student/student')
+        component: () => import('../views/pages/laboran/student')
     },
     {
         path: '/laboran/staff',
@@ -90,7 +89,7 @@ export default [
         meta: {
             authRequired: true,
         },
-        component: () => import('../views/pages/laboran/staff/staff')
+        component: () => import('../views/pages/laboran/staff')
     },
     {
         path: '/laboran/course',
@@ -98,7 +97,7 @@ export default [
         meta: {
             authRequired: true,
         },
-        component: () => import('../views/pages/laboran/course/course')
+        component: () => import('../views/pages/laboran/course')
     },
     {
         path: '/laboran/classroom',
@@ -106,28 +105,8 @@ export default [
         meta: {
             authRequired: true,
         },
-        component: () => import('../views/pages/laboran/classroom/classroom')
+        component: () => import('../views/pages/laboran/classroom')
     },
-    {
-        path: '/laboran/class-course',
-        name: 'laboran-classcourse',
-        meta: {
-            authRequired: true,
-        },
-        component: () => import('../views/pages/laboran/class-course/class-course')
-    },
-    
-    //path temp
-    {
-        path: '/temp/create-test',
-        name: 'create-test',
-        meta: {
-            authRequired: true,
-        },
-        component: () => import('../views/pages/temp/create-test')
-    },
-
-    //aslab
     {
         path: '/aslab/jadwal',
         name: 'aslab-jadwal',
@@ -154,6 +133,7 @@ export default [
             authRequired: true,
         },
         component: () => import('../views/pages/asprak/input-jurnal')
+<<<<<<< HEAD
     },
 
     {
@@ -163,6 +143,8 @@ export default [
             authRequired: true,
         },
         component: () => import('../views/pages/asprak/lihat-feedback')
+=======
+>>>>>>> parent of 4ae1c6e (26/07/2021)
     },
 
     {
@@ -248,14 +230,13 @@ export default [
         },
         component: () => import('../views/pages/student/pengaturan')
     },
-
     //ini paling bawah
     {
         path :'*',
         component: () => import('../views/pages/utility/error-404')
     },
     {
-        path :'/about-us',
+        path :'about-us',
         name: 'about-us',
         component: () => import('../views/pages/utility/about-us')
     },

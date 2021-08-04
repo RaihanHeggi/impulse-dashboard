@@ -185,6 +185,7 @@ export default {
                         <p>
                           Already have an account ?
                           <router-link
+                            tag="a"
                             to="/login"
                             class="font-weight-medium text-primary"
                           >Login</router-link>
