@@ -134,6 +134,7 @@ export default [
         },
         component: () => import('../views/pages/asprak/input-jurnal')
 <<<<<<< HEAD
+<<<<<<< HEAD
     },
 
     {
@@ -143,6 +144,8 @@ export default [
             authRequired: true,
         },
         component: () => import('../views/pages/asprak/lihat-feedback')
+=======
+>>>>>>> parent of 4ae1c6e (26/07/2021)
 =======
 >>>>>>> parent of 4ae1c6e (26/07/2021)
     },

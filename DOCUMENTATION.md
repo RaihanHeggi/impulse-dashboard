@@ -106,12 +106,16 @@
 - PDF Viewer (blank)
 
 <<<<<<< HEAD
+<<<<<<< HEAD
 ## Edgar Commited to Main
 ## v21.07.26.01
 - Fixed Page Tes Awal
 - Fixed Page Tes Jurnal
 - Fixed Page Tes Akhir
 
+=======
+## v21.07.03.02
+>>>>>>> parent of 4ae1c6e (26/07/2021)
 =======
 ## v21.07.03.02
 >>>>>>> parent of 4ae1c6e (26/07/2021)

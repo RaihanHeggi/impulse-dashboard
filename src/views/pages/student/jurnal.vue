@@ -4,7 +4,10 @@ import Layout from "../../layouts/main";
 import PageHeader from "@/components/page-header";
 import appConfig from "@/app.config";
 <<<<<<< HEAD
+<<<<<<< HEAD
 import pdf from 'vue-pdf'
+=======
+>>>>>>> parent of 4ae1c6e (26/07/2021)
 =======
 >>>>>>> parent of 4ae1c6e (26/07/2021)
 
@@ -20,6 +23,7 @@ export default {
   data() {
     return {
 <<<<<<< HEAD
+<<<<<<< HEAD
     currentPage: 0,
     pageCount: 0,
     page: 1,
@@ -27,6 +31,10 @@ export default {
 		numPages: undefined,
     title: "Jurnal",
     items: [
+=======
+      title: "Tes Akhir",
+      items: [
+>>>>>>> parent of 4ae1c6e (26/07/2021)
 =======
       title: "Tes Akhir",
       items: [
@@ -41,10 +49,14 @@ export default {
         }
       ]
 <<<<<<< HEAD
+<<<<<<< HEAD
     }
     },
   mounted() {
   this.src = pdf.createLoadingTask('../pdf/SoalJurnal.pdf');
+=======
+    };
+>>>>>>> parent of 4ae1c6e (26/07/2021)
 =======
     };
 >>>>>>> parent of 4ae1c6e (26/07/2021)
@@ -55,6 +67,7 @@ export default {
 <template>
   <Layout>
     <PageHeader :title="title" :items="items" />
+<<<<<<< HEAD
 <<<<<<< HEAD
 		<pdf
 			:src="src"
@@ -71,6 +84,9 @@ export default {
       :page="i"
       style="height: 100%"
 		></pdf>
+=======
+    
+>>>>>>> parent of 4ae1c6e (26/07/2021)
 =======
     
 >>>>>>> parent of 4ae1c6e (26/07/2021)
