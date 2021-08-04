@@ -3,27 +3,19 @@
 import Layout from "../../layouts/main";
 import PageHeader from "@/components/page-header";
 import appConfig from "@/app.config";
-<<<<<<< HEAD
-<<<<<<< HEAD
 import pdf from 'vue-pdf'
-=======
->>>>>>> parent of 4ae1c6e (26/07/2021)
-=======
->>>>>>> parent of 4ae1c6e (26/07/2021)
 
 /**
  * Form wizard component
  */
 export default {
   page: {
-    title: "Tes Akhir",
+    title: "Jurnal",
     meta: [{ name: "description", content: appConfig.description }]
   },
-  components: { Layout, PageHeader },
+  components: { Layout, PageHeader,pdf },
   data() {
     return {
-<<<<<<< HEAD
-<<<<<<< HEAD
     currentPage: 0,
     pageCount: 0,
     page: 1,
@@ -31,35 +23,19 @@ export default {
 		numPages: undefined,
     title: "Jurnal",
     items: [
-=======
-      title: "Tes Akhir",
-      items: [
->>>>>>> parent of 4ae1c6e (26/07/2021)
-=======
-      title: "Tes Akhir",
-      items: [
->>>>>>> parent of 4ae1c6e (26/07/2021)
         {
           text: "Praktikum",
           href: "/praktikan/praktikum"
         },
         {
-          text: "Tes Akhir",
+          text: "Jurnal",
           active: true
         }
       ]
-<<<<<<< HEAD
-<<<<<<< HEAD
     }
     },
   mounted() {
   this.src = pdf.createLoadingTask('../pdf/SoalJurnal.pdf');
-=======
-    };
->>>>>>> parent of 4ae1c6e (26/07/2021)
-=======
-    };
->>>>>>> parent of 4ae1c6e (26/07/2021)
   }
 };
 </script>
@@ -67,8 +43,6 @@ export default {
 <template>
   <Layout>
     <PageHeader :title="title" :items="items" />
-<<<<<<< HEAD
-<<<<<<< HEAD
 		<pdf
 			:src="src"
       @num-pages="pageCount = $event"
@@ -84,12 +58,6 @@ export default {
       :page="i"
       style="height: 100%"
 		></pdf>
-=======
-    
->>>>>>> parent of 4ae1c6e (26/07/2021)
-=======
-    
->>>>>>> parent of 4ae1c6e (26/07/2021)
   </Layout>
 </template>
 
