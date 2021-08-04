@@ -2,28 +2,28 @@
 import Layout from "../../../layouts/main";
 import PageHeader from "@/components/page-header";
 import { notificationMethods } from "@/state/helpers";
-import TableStudent from "./table-student";
-import InputStudent from "./input-student";
+import TableRoom from "./table-room";
+import InputRoom from "./input-room";
 
 export default {
   components: {
     Layout,
     PageHeader,
-    TableStudent,
-    InputStudent,
+    TableRoom,
+    InputRoom,
   },
   created() {
     document.body.classList.add("auth-body-bg");
   },
   data() {
     return {
-      title: "Student Data",
+      title: "Room Data",
       items: [
         {
           text: "Laboran"
         },
         {
-          text: "Student Data",
+          text: "Room Data",
           active: true
         }
       ],
@@ -38,7 +38,7 @@ export default {
     ...notificationMethods,
 
     refreshData(){
-        this.$refs.TableStudent.refreshData();
+        this.$refs.TableRoom.refreshData();
     }
   }
 };
@@ -55,15 +55,15 @@ export default {
             <b-tabs nav-class="nav-tabs-custom" @input="refreshData">
               <b-tab title-link-class="p-3">
                 <template v-slot:title>
-                  <a class="font-weight-bold active">All Students</a>
+                  <a class="font-weight-bold active">All Rooms</a>
                 </template>
-                <TableStudent ref='TableStudent'/>
+                <TableRoom ref='TableRoom'/>
               </b-tab>
               <b-tab title-link-class="p-3">
                   <template v-slot:title>
-                      <a class="font-weight-bold active">Input Student</a>
+                      <a class="font-weight-bold active">Input Room</a>
                   </template>
-                  <InputStudent/>
+                  <InputRoom/>
               </b-tab>
             </b-tabs>
           </div>

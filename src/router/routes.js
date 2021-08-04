@@ -109,6 +109,14 @@ export default [
         component: () => import('../views/pages/laboran/classroom/classroom')
     },
     {
+        path: '/laboran/room',
+        name: 'laboran-room',
+        meta: {
+            authRequired: true,
+        },
+        component: () => import('../views/pages/laboran/room/room')
+    },
+    {
         path: '/laboran/class-course',
         name: 'laboran-classcourse',
         meta: {
@@ -116,15 +124,13 @@ export default [
         },
         component: () => import('../views/pages/laboran/class-course/class-course')
     },
-    
-    //path temp
     {
-        path: '/temp/create-test',
-        name: 'create-test',
+        path: '/laboran/asprak-class',
+        name: 'laboran-asprakclass',
         meta: {
             authRequired: true,
         },
-        component: () => import('../views/pages/temp/create-test')
+        component: () => import('../views/pages/laboran/asprak-class/asprak-class')
     },
 
     //aslab
@@ -175,12 +181,21 @@ export default [
     },
 
     {
-        path: '/asprak/absensi-asprak',
+        path: '/absen/absensi-asprak',
         name: 'asprak-absensi-asprak',
         meta: {
             authRequired: true,
         },
-        component: () => import('../views/pages/asprak/absensi-asprak')
+        component: () => import('../views/pages/asprak/absen/absensi-asprak')
+    },
+
+    {
+        path: '/absen/berita-acara',
+        name: 'berita-acara-asprak',
+        meta: {
+            authRequired: true,
+        },
+        component: () => import('../views/pages/asprak/absen/berita-acara')
     },
 
     //path praktikan
@@ -241,7 +256,7 @@ export default [
         component: () => import('../views/pages/student/tes_akhir')
     },
     {
-        path: '/praktikan/pengaturan',      
+        path: '/pengaturan',      
         name: 'praktikan-pengaturan',
         meta: {
             authRequired: true,
