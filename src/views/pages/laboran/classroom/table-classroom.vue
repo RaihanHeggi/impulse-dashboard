@@ -68,6 +68,7 @@ export default {
   mounted() {
     // Set the initial number of items
     this.fetchData();
+    this.loadDataDropdown();
   },
   methods: {
     ...notificationMethods,
@@ -124,6 +125,9 @@ export default {
 
             this.totalRows = response.data.meta.pagination.total;
             this.dataClassrooms = response.data.data;
+            if (this.dataClassrooms){
+                this.setData(this.dataClassrooms);
+            }
           })
           .catch(error => {
             this.isFentchingData = false;
@@ -337,13 +341,7 @@ export default {
       </div>
     </div>
     <div name="modalEdit">
-      <b-modal 
-        size="lg" 
-        id="modal-edit" 
-        title="Edit Classroom" 
-        hide-footer 
-        title-class="font-18"
-      >
+      <b-modal centered id="modal-edit" title="Edit Classroom" hide-footer title-class="font-18">
         <form class="form-horizontal col-sm-12 col-md-12" @submit.prevent="editClassroom">
           <div class="tab-pane" id="metadata">
             <div class="col-sm-12">

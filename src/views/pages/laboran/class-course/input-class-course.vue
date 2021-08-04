@@ -24,7 +24,7 @@ export default {
   data() {
     return {
       //input course
-      title: "Course Class Data",
+      title: "Class Course Data",
       dataInput: { 
           staff_id: "", 
           class_id: "",

@@ -109,14 +109,6 @@ export default [
         component: () => import('../views/pages/laboran/classroom/classroom')
     },
     {
-        path: '/laboran/room',
-        name: 'laboran-room',
-        meta: {
-            authRequired: true,
-        },
-        component: () => import('../views/pages/laboran/room/room')
-    },
-    {
         path: '/laboran/class-course',
         name: 'laboran-classcourse',
         meta: {
@@ -124,13 +116,15 @@ export default [
         },
         component: () => import('../views/pages/laboran/class-course/class-course')
     },
+    
+    //path temp
     {
-        path: '/laboran/asprak-class',
-        name: 'laboran-asprakclass',
+        path: '/temp/create-test',
+        name: 'create-test',
         meta: {
             authRequired: true,
         },
-        component: () => import('../views/pages/laboran/asprak-class/asprak-class')
+        component: () => import('../views/pages/temp/create-test')
     },
 
     //aslab
@@ -154,21 +148,12 @@ export default [
 
     //path asprak
     {
-        path: '/asprak/input-soal',
-        name: 'asprak-input-soal',
+        path: '/asprak/input-jurnal',
+        name: 'asprak-input-jurnal',
         meta: {
             authRequired: true,
         },
-        component: () => import('../views/pages/asprak/input-soal/input-soal')
-    },
-
-    {
-        path: '/input-soal/create-test',
-        name: 'asprak-input-soal',
-        meta: {
-            authRequired: true,
-        },
-        component: () => import('../views/pages/asprak/input-soal/create-test')
+        component: () => import('../views/pages/asprak/input-jurnal')
     },
 
     {

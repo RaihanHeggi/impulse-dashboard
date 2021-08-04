@@ -52,7 +52,7 @@ export default {
       ],
 
       courseData: [],
-      classCourseData: [],
+      kelasData: [],
       namaKelasData: [],
       isKelasNotSelected: true,
 
@@ -284,15 +284,14 @@ export default {
         )
     },
 
-    async getDataClassCourses(namaKelasData){
+    async getDataClassrooms(namaKelasData){
         const params = this.getRequestParams(
-                null,
                 namaKelasData.name
         );
-        return api.getAllClassCourses(params)
+        return api.getListClassrooms(params)
             .then(response => {
-                if (response.data.data){
-                    this.classCourseData = response.data.data;
+                if (response.data.classes){
+                    this.kelasData = response.data.classes;
                 }
             })
             .catch(error => {
@@ -300,14 +299,42 @@ export default {
             })
     },
 
+    async getDataCourses(kelasData){
+        return new Promise((resolve, reject) => {
+            kelasData.forEach((element, index, array) => {
+                const params = this.getRequestParams(
+                    element.course_id
+                );
+                this.getListCourses(params).then(()=>{
+                  if (index === array.length -1) resolve();
+                })
+            });
+        })
+        .catch(error => {
+            console.log(error)
+        });
+    },
+
+    async getListCourses(params){
+      return (
+        api.getListCourses(params)
+                    .then(response => {
+                        if (response.data.courses){
+                            this.courseData = response.data.courses
+                        }
+                    })
+                    .catch(error => {
+                        console.log(error)
+                    })
+      )
+    },
+
     async setKelas(value){
         this.class_data = value;
         this.removeCourse();
 
-        await this.getDataClassCourses(value);
-        this.classCourseData.forEach((element, index, array) => {
-            this.courseData.push(element.course)
-        });
+        await this.getDataClassrooms(value);
+        await this.getDataCourses(this.kelasData);
 
         this.isKelasNotSelected = false;
     },
@@ -334,6 +361,7 @@ export default {
       this.dataEdit.student_id = data.item.student_id;
       this.dataEdit.class_id = data.item.class_id;
       this.dataEditDetail.nim = data.item.nim;
+      await this.setKelasEdit(data.item);
 
       //edit role
       this.dataEditRole.no_induk = data.item.nim;
@@ -373,6 +401,50 @@ export default {
             })
         )
       }
+    },
+
+    async setKelasEdit(value){
+        this.dataEditDetail.class_name = value.name;
+        this.removeCourseEdit();
+
+        let data = {};
+        data['name'] = value.class_name;
+
+        await this.getDataClassrooms(data);
+        await this.getDataCourses(this.kelasData)
+          .then(() =>{
+              let kelas = {};
+              if (value.class_name){
+                kelas = this.kelasData.find(data => data.name === value.class_name);
+                let course = this.courseData.find(data => data.id === kelas.course_id);
+
+                this.setCourseEdit(course);
+              }
+              else {
+                kelas = this.kelasData.find(data => data.name === value.name);
+              }
+              this.class_dataEdit = kelas;
+              this.dataEdit.class_id = kelas.id;
+
+              this.isKelasEditNotSelected = false;
+          })
+    },
+
+    async setCourseEdit(value){
+        this.dataEditDetail.course_name = value.name;
+        let data = this.courseData.find(data => data.id === value.id);
+        this.course_dataEdit = data;
+    },
+
+    removeKelasEdit(){
+        this.isKelasEditNotSelected = true;
+        this.class_dataEdit = "";
+        this.courseData = [];
+        this.removeCourseEdit();
+    },
+
+    removeCourseEdit(){
+        this.course_dataEdit = "";
     },
 
     getRoles(no_induk){
@@ -576,48 +648,120 @@ export default {
       </div>
     </div>
     <div name="modalEdit">
-      <b-modal 
-        size="lg" 
-        id="modal-edit" 
-        title="Edit Student" 
-        hide-footer 
-        title-class="font-18"
-      >
-        <div class="col-sm-12">
-            <div class="form-group col-sm-12">
-                <label for="nim">NIM</label>
-                <input 
-                style="background-color: #F0F4F6;"
-                :disabled="true"
-                v-model="dataEditDetail.nim"
-                id="nip" 
-                name="nip" 
-                type="number" 
-                class="form-control"/>
-            </div>
-        </div>
-        <form class="form-horizontal col-sm-12 col-md-12" @submit.prevent="editRole">
-          <div class="tab-pane" id="metadata">
-              <div class="col-sm-12">
-                  <div class="form-group">
-                      <label class="control-label">Roles</label>
-                      <multiselect
-                          v-model="role_data"
-                          :options="roleData"
-                          :multiple="true"
-                          @remove="removeRole"
-                      ></multiselect>
-                  </div>
-              </div>
-              <div class="text-center mt-4">
-                  <button
-                  type="submit"
-                  class="btn btn-primary mr-2 waves-effect waves-light"
-                  >Save Changes</button>
-                  <button type="button" @click="hideModal" class="btn btn-light waves-effect">Cancel</button>
-              </div>
+      <b-modal centered id="modal-edit" title="Edit Student" hide-footer title-class="font-18">
+        <div class="card">
+          <div class="card-body pt-0">
+            <b-tabs nav-class="nav-tabs-custom">
+              <b-tab title-link-class="p-3">
+                <template v-slot:title>
+                  <a class="font-weight-bold active">Edit Data</a>
+                </template>
+                <template>
+                    <div class='mt-4'>
+                        <form class="form-horizontal col-sm-12 col-md-12" @submit.prevent="setStudentClass">
+                        <div class="tab-pane" id="metadata">
+                            <div class="col-sm-12">
+                                <div class="form-group">
+                                    <label for="nim">NIM</label>
+                                    <input 
+                                    style="background-color: #F0F4F6;"
+                                    :disabled="true"
+                                    v-model="dataEditDetail.nim"
+                                    id="nip" 
+                                    name="nip" 
+                                    type="number" 
+                                    class="form-control"
+                                    :class="{ 'is-invalid': submitted && $v.dataEdit.nim.$error }" />
+
+                                    <div
+                                    v-if="submitted && !$v.dataEdit.nim.required"
+                                    class="invalid-feedback"
+                                    >NIM is required.</div>
+                                </div>
+                            </div>
+                            <div class="col-sm-12">
+                                <div class="form-group">
+                                  <label class="control-label">Kelas Mata Kuliah</label>
+                                  <multiselect
+                                      v-model="class_dataEdit"
+                                      :options="namaKelasData"
+                                      label="name"
+                                      track-by="name"
+                                      @select="setKelasEdit"
+                                      @remove="removeKelasEdit"
+                                      :class="{ 'is-invalid': submitted && $v.dataEditDetail.class_name.$error }" 
+                                  ></multiselect>
+                                      <div
+                                      v-if="submitted && !$v.dataEditDetail.class_name.required"
+                                      class="invalid-feedback"
+                                      >Kelas Mata Kuliah is required.</div>
+                                </div>
+                            </div>
+                            <div class="col-sm-12">
+                                <div class="form-group">
+                                  <label class="control-label">Nama Mata Kuliah</label>
+                                  <multiselect
+                                      v-model="course_dataEdit"
+                                      :options="loadCourseData"
+                                      :disabled="isKelasEditNotSelected"
+                                      label="name"
+                                      track-by="name"
+                                      @select="setCourseEdit"
+                                      @remove="removeCourseEdit"
+                                      :class="{ 'is-invalid': submitted && $v.dataEditDetail.course_name.$error }" 
+                                  ></multiselect>
+                                      <div
+                                      v-if="submitted && !$v.dataEditDetail.course_name.required"
+                                      class="invalid-feedback"
+                                      >Nama Mata Kuliah is required.</div>
+                                </div>
+                            </div>
+                            <div class="text-center mt-4">
+                                <button
+                                type="submit"
+                                class="btn btn-primary mr-2 waves-effect waves-light"
+                                >Save Changes</button>
+                                <button type="button" @click="hideModal" class="btn btn-light waves-effect">Cancel</button>
+                            </div>
+                        </div>
+                        </form>
+                    </div>
+                </template>
+              </b-tab>
+              <b-tab title-link-class="p-3">
+                  <template v-slot:title>
+                      <a class="font-weight-bold active">Edit Roles</a>
+                  </template>
+                  <template>
+                    <div class='mt-4'>
+                        <form class="form-horizontal col-sm-12 col-md-12" @submit.prevent="editRole">
+                        <div class="tab-pane" id="metadata">
+                            <div class="col-sm-12">
+                                <div class="form-group">
+                                    <label class="control-label">Roles</label>
+                                    <multiselect
+                                        v-model="role_data"
+                                        :options="roleData"
+                                        :multiple="true"
+                                        @remove="removeRole"
+                                    ></multiselect>
+                                </div>
+                            </div>
+                            <div class="text-center mt-4">
+                                <button
+                                type="submit"
+                                class="btn btn-primary mr-2 waves-effect waves-light"
+                                >Save Changes</button>
+                                <button type="button" @click="hideModal" class="btn btn-light waves-effect">Cancel</button>
+                            </div>
+                        </div>
+                        </form>
+                    </div>
+                </template>
+              </b-tab>
+            </b-tabs>
           </div>
-        </form>
+        </div>
       </b-modal>
     </div>
   </div>

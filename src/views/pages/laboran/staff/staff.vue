@@ -4,7 +4,6 @@ import PageHeader from "@/components/page-header";
 import { notificationMethods } from "@/state/helpers";
 import TableStaff from "./table-staff";
 import InputStaff from "./input-staff";
-import ImportStaff from "./import-staff";
 
 export default {
   components: {
@@ -12,7 +11,6 @@ export default {
     PageHeader,
     TableStaff,
     InputStaff,
-    ImportStaff,
   },
   created() {
     document.body.classList.add("auth-body-bg");
@@ -63,15 +61,9 @@ export default {
               </b-tab>
               <b-tab title-link-class="p-3">
                   <template v-slot:title>
-                      <a class="font-weight-bold active">Input Staff</a>
+                      <a class="font-weight-bold active">Input Staff(s)</a>
                   </template>
                   <InputStaff/>
-              </b-tab>
-              <b-tab title-link-class="p-3">
-                  <template v-slot:title>
-                      <a class="font-weight-bold active">Import Excel</a>
-                  </template>
-                  <ImportStaff/>
               </b-tab>
             </b-tabs>
           </div>

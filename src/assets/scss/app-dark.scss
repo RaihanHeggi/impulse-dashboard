@@ -19,7 +19,9 @@ File: Main dark Css File
 @import "custom/structure/topbar";
 @import "custom/structure/page-head";
 @import "custom/structure/footer";
+@import "custom/structure/right-sidebar";
 @import "custom/structure/vertical";
+@import "custom/structure/horizontal-nav";
 @import "custom/structure/layouts";
 
 // Components
@@ -62,5 +64,10 @@ File: Main dark Css File
 
 // Pages
 @import "custom/pages/authentication";
+@import "custom/pages/ecommerce";
+@import "custom/pages/email";
+@import "custom/pages/chat";
+@import "custom/pages/kanbanboard";
 @import "custom/pages/coming-soon";
+@import "custom/pages/timeline";
 @import "custom/pages/extras-pages";

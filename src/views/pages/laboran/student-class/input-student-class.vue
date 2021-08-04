@@ -4,6 +4,7 @@ import { required } from "vuelidate/lib/validators";
 import { notificationMethods } from "@/state/helpers";
 import { api } from '@/api';
 import Swal from "sweetalert2";
+import vue2Dropzone from "vue2-dropzone";
 import store from '@/store';
 
 /**
@@ -12,6 +13,7 @@ import store from '@/store';
 export default {
   components: {
     Multiselect,
+    vueDropzone: vue2Dropzone,
   },
   validations: {
     dataStudent: {
@@ -44,7 +46,6 @@ export default {
           semester: "",
           },
       submitted: false,
-      submitted_nim: false,
       inputError: null,
       tryingToInput: false,
       isInputError: false,
@@ -53,24 +54,45 @@ export default {
       isFentchingData: false,
       isKelasNotSelected: true,
 
-      //mahasiswa
-      isNimNotAvailable: true,
-      isNimFound: false,
-      disabled_bg: {
-			backgroundColor: "#F0F4F6",
-		},
-
       //dropdown list data
       religionData: ['islam', 'protestan', 'katolik', 'buddha', 'hindu', 'khonghucu', 'kristen'],
       genderData: ['male', 'female'],
       dosenData: [],
       courseData: [],
-      classCourseData: [],
+      kelasData: [],
       namaKelasData: [],
 
       //v-model dropdown value = array of objects
       course_data: "",
       class_data: "",
+
+      //dropzone
+      seen: false,
+      dropzoneOptions: {
+        url: process.env.VUE_APP_BACKEND_URL + "/laboran/student/import",
+        thumbnailWidth: 150,
+        maxFilesize: 5,
+        
+        headers:{"Authorization":'Bearer ' + store.getters.getLoggedUser.token},
+        acceptedFiles: "text/csv,application/vnd.ms-excel,application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+        maxFiles: 1,
+        init: function() {
+          this.on('addedfile', function(file) {
+            console.log(file)
+            if (this.files.length > 1) {
+            this.removeFile(this.files[0]);
+            }
+          });
+          this.on('error', function(file, response){
+            console.log(response)
+            Swal.fire("Failed to upload your file!", "Cek kembali kesesuaian file dengan deskripsi.", "error");
+          });
+          this.on('success', function(file, response){
+            console.log(response)
+            Swal.fire("Uploaded!", "Your file has been uploaded.", "success");
+          })
+        }
+      }
     };
   },
   mounted() {
@@ -79,6 +101,12 @@ export default {
   computed: {
     notification() {
       return this.$store ? this.$store.state.notification : null;
+    },
+    loadDosenData() {
+        return this.dosenData;
+    },
+    loadKelasData() {
+        return this.kelasData;
     },
     loadCourseData() {
         return this.courseData;
@@ -140,7 +168,6 @@ export default {
             if (result.value) {
                 this.clearForm();
                 this.submitted = false;
-                this.submitted_nim = false;
                 this.isInputCanceled = true;
                 Swal.fire("Canceled!", "The form has been left blank.", "success");
             }
@@ -162,20 +189,13 @@ export default {
         this.courseData = [];
         this.course_data = "";
         this.class_data = "";
-        this.submitted = false;
-        this.submitted_nim = false;
-        this.nimChanged();
-        this.isNimNotAvailable = true;
     },
 
-    getRequestParams(search, kelas) {
+    getRequestParams(search) {
       let params = {};
 
       if (search) {
         params["search"] = search;
-      }
-      if (kelas) {
-        params["kelas"] = kelas;
       }
 
       return params;
@@ -195,15 +215,14 @@ export default {
         )
     },
 
-    async getDataClassCourses(namaKelasData){
+    async getDataClassrooms(namaKelasData){
         const params = this.getRequestParams(
-                null,
                 namaKelasData.name
         );
-        return api.getAllClassCourses(params)
+        return api.getListClassrooms(params)
             .then(response => {
-                if (response.data.data){
-                    this.classCourseData = response.data.data;
+                if (response.data.classes){
+                    this.kelasData = response.data.classes;
                 }
             })
             .catch(error => {
@@ -211,11 +230,48 @@ export default {
             })
     },
 
-    async setDataClassroom(classCourseData, course_id){
-        let data = classCourseData.find(data => data.course.id === course_id);
-        this.dataStudent.academic_year = data.academic_year.name;
-        this.dataStudent.semester = data.academic_year.semester;
-        this.dataStudent.staff_code = data.staff.code;
+    async getDataCourses(kelasData){
+        return new Promise((resolve, reject) => {
+            kelasData.forEach((element, index, array) => {
+                const params = this.getRequestParams(
+                    element.course_id
+                );
+                api.getListCourses(params)
+                    .then(response => {
+                        if (response.data.courses){
+                            this.courseData = response.data.courses
+                        }
+                    })
+                    .catch(error => {
+                        console.log(error)
+                    })
+                if (index === array.length -1) resolve();
+            });
+        })
+        .catch(error => {
+            console.log(error)
+        });
+    },
+
+    async setDataClassroom(kelasData, course_id){
+        let data = kelasData.find(data => data.course_id === course_id);
+        this.dataStudent.academic_year = data.academic_year;
+        this.dataStudent.semester = data.semester;
+
+        const params = this.getRequestParams(
+                data.staff_id
+        );
+        return api.getListStaffs(params)
+            .then(response => {
+                if (response.data.staffs){
+                    let staffs = response.data.staffs;
+                    let staff = staffs.find(item => item.id === data.staff_id);
+                    this.dataStudent.staff_code = staff.code;
+                }
+            })
+            .catch(error => {
+                console.log(error)
+            });
     },
 
     loadDataDropdown(){
@@ -227,10 +283,8 @@ export default {
 
         this.removeCourse();
         this.dataStudent.class_name = value.name;
-        await this.getDataClassCourses(value);
-        this.classCourseData.forEach((element, index, array) => {
-            this.courseData.push(element.course)
-        });
+        await this.getDataClassrooms(value);
+        await this.getDataCourses(this.kelasData);
 
         this.isKelasNotSelected = false;
         this.isFentchingData = false;
@@ -241,7 +295,7 @@ export default {
 
         this.dataStudent.course_name = value.name;
         this.dataStudent.course_code = value.code;
-        await this.setDataClassroom(this.classCourseData, value.id);
+        await this.setDataClassroom(this.kelasData, value.id);
 
         this.isFentchingData = false;
     },
@@ -262,60 +316,56 @@ export default {
         this.dataStudent.semester = "";
         this.dataStudent.staff_code = "";
     },
-
-    checkNim(){
-        this.submitted_nim = true;
-        this.$v.dataStudent.nim.$touch();
-        if (this.$v.dataStudent.nim.$invalid) {
-            return;
-        }
-        return api.showStudent(this.dataStudent.nim)
-            .then(response => {
-                if (response.data.data){
-                    this.isNimFound = true;
-                    this.setMahasiswa(response.data.data)
-                }
-                else{
-                    this.isNimFound = false;
-                    this.disabled_bg.backgroundColor = "";
-                    this.isNimNotAvailable = false;
-                }
-            })
-            .catch(error => {
-                Swal.fire({
-                    icon: 'error',
-                    title: 'Oops...',
-                    text: 'Something went wrong!',
-                    footer: error
-                })
-            });
-    },
-
-    nimChanged(){
-        this.disabled_bg.backgroundColor = "#F0F4F6";
-        this.isNimNotAvailable = true;
-        this.submitted_nim = false;
-        this.removeMahasiswa();
-    },
-
-    setMahasiswa(data){
-        this.dataStudent.name = data.name
-        this.dataStudent.gender = data.gender
-        this.dataStudent.religion = data.religion
-    },
-
-    removeMahasiswa(){
-        this.dataStudent.name = "";
-        this.dataStudent.gender = "";
-        this.dataStudent.religion = "";
-    }
   }
 };
 </script>
 
 <template>
     <div div class="row mt-4">
-        <form class="form-horizontal col-sm-12 col-md-12" @submit.prevent="inputStudent">
+        <div class="col-sm-12 col-md-12">
+            <!-- <div title="Import Excel"> -->
+            <div>
+                <div class="tab-pane" id="metadata">
+                    <center>
+                    <b-button variant="success" @click="seen = !seen">Import Excel</b-button>
+                    </center>
+                    <div class="card mt-2" v-if="seen">
+                        <div class="card-body">
+                            <p style="color: red; font-size: 12px; margin: 0 !important;">IMPORTANT – PLEASE READ CAREFULLY</p>
+                            <p class="mt-2" style="color: black; font-size: 14px; margin-bottom: 0 !important;">Deskripsi upload file Excel:</p>
+                            <p class="card-title-desc" style="font-size: 14px; margin: 0 !important;">
+                                - Pastikan kode dosen yang digunakan tersedia di <b>Staff Data</b>,<br>
+                                - Pastikan file bertipe <b>.CSV</b> atau <b>.XSLX</b>,<br>
+                                - Pastikan hanya ada <b>satu sheet</b>,<br>
+                                - Pastikan Header / Row ke 1 dan urutan data di dalam file sama seperti berikut ini:<br>
+                            </p>
+                            <img src="@/assets/images/student-excel-example.png" style="box-sizing: border-box; width: 100%;"/>
+                            <div class="mb-4 mt-2">
+                                <p class="card-title-desc" style="font-size: 14px; margin: 0 !important;">
+                                    Contoh file Excel: <a href="/files/studentdummy.xlsx" download>studentdummy.xlsx</a><br>
+                                </p>
+                            </div>
+                            <!-- file upload -->
+                            <vue-dropzone
+                                id="dropzone"
+                                ref="myVueDropzone"
+                                :use-custom-slot="true"
+                                :options="dropzoneOptions"
+                            >
+                                <div class="dropzone-custom-content">
+                                <i class="display-4 text-muted bx bxs-cloud-upload"></i>
+                                <h4>Drop a file here or click to upload.</h4>
+                                </div>
+                            </vue-dropzone>
+                        </div>
+                    </div>
+                    <center class="mt-4">
+                        <p>Or</p>
+                    </center>
+                </div>
+            </div>
+        </div>
+        <form class="form-horizontal col-sm-12 col-md-12 mt-4" @submit.prevent="inputStudent">
             <!-- <div title="Student Data"> -->
             <div>
                 <div class="tab-pane" id="metadata">
@@ -354,46 +404,25 @@ export default {
                     </div>
 
                     <div class="row">
-                        <div class="col-sm-8">
+                        <div class="col-sm-6">
                             <div class="form-group">
                                 <label for="nim">NIM</label>
-                                <div class="row">
-                                    <div class="col-sm-8">
-                                        <input
-                                            v-model="dataStudent.nim"
-                                            id="nim"
-                                            name="nim"
-                                            type="number"
-                                            class="form-control"
-                                            @input="nimChanged"
-                                            :class="{ 'is-invalid': submitted_nim && $v.dataStudent.nim.$error }"
-                                        />
-                                        <div
-                                        v-if="submitted_nim && !$v.dataStudent.nim.required"
-                                        class="invalid-feedback"
-                                        >NIM is required.</div>
-                                    </div>
-                                    <div class="col-sm-4">
-                                        <b-button variant="success" @click="checkNim"
-                                        :class="{ 
-                                            'is-invalid': submitted_nim && !isNimFound,
-                                            'is-valid': submitted_nim && isNimFound }">Check NIM</b-button>
-                                        <div
-                                        v-if="!isNimFound"
-                                        class="invalid-feedback"
-                                        >NIM is not available, please input Name, Gender, and Religion.</div>
-                                        <div
-                                        v-if="isNimFound"
-                                        class="valid-feedback"
-                                        >NIM is available.</div>
-                                    </div>
-                                </div>
+                                <input
+                                    v-model="dataStudent.nim"
+                                    id="nim"
+                                    name="nim"
+                                    type="number"
+                                    class="form-control"
+                                    :class="{ 'is-invalid': submitted && $v.dataStudent.nim.$error }"
+                                />
+                                <div
+                                v-if="submitted && !$v.dataStudent.nim.required"
+                                class="invalid-feedback"
+                                >NIM is required.</div>
                             </div>
                         </div>
-                    </div>
 
-                    <div class="row">
-                        <div class="col-sm-4">
+                        <div class="col-sm-6">
                             <div class="form-group">
                                 <label for="nama">Nama Mahasiswa</label>
                                 <input 
@@ -402,8 +431,6 @@ export default {
                                 name="nama" 
                                 type="text" 
                                 class="form-control"
-                                :disabled="isNimNotAvailable"
-                                v-bind:style="disabled_bg"
                                 :class="{ 'is-invalid': submitted && $v.dataStudent.name.$error }" />
 
                                 <div
@@ -412,18 +439,17 @@ export default {
                                 >Nama Mahasiswa is required.</div>
                             </div>
                         </div>
+                    </div>
 
-                        <div class="col-md-4" v-if="isNimNotAvailable">
+                    <div class="row">
+                        <div class="col-md-6">
                             <div class="form-group">
-                                <label class="control-label">Jenis Kelamin</label>
-                                <input
-                                    v-model="dataStudent.gender"
-                                    :disabled="isNimNotAvailable"
-                                    type="text" 
-                                    class="form-control"
-                                    v-bind:style="disabled_bg"
-                                    :class="{ 'is-invalid': submitted && $v.dataStudent.gender.$error }" 
-                                >
+                            <label class="control-label">Jenis Kelamin</label>
+                            <multiselect
+                                v-model="dataStudent.gender"
+                                :options="genderData"
+                                :class="{ 'is-invalid': submitted && $v.dataStudent.gender.$error }" 
+                            ></multiselect>
                                 <div
                                 v-if="submitted && !$v.dataStudent.gender.required"
                                 class="invalid-feedback"
@@ -431,49 +457,14 @@ export default {
                             </div>
                         </div>
 
-                        <div class="col-md-4" v-if="isNimNotAvailable">
+                        <div class="col-md-6">
                             <div class="form-group">
-                                <label class="control-label">Agama</label>
-                                <input
-                                    v-model="dataStudent.religion"
-                                    :disabled="isNimNotAvailable"
-                                    type="text" 
-                                    class="form-control"
-                                    v-bind:style="disabled_bg"
-                                    :class="{ 'is-invalid': submitted && $v.dataStudent.religion.$error }" 
-                                >
-                                <div
-                                v-if="submitted && !$v.dataStudent.religion.required"
-                                class="invalid-feedback"
-                                >Agama is required.</div>
-                            </div>
-                        </div>
-
-                        <div class="col-md-4" v-if="!isNimNotAvailable">
-                            <div class="form-group">
-                                <label class="control-label">Jenis Kelamin</label>
-                                <multiselect
-                                    v-model="dataStudent.gender"
-                                    :disabled="isNimNotAvailable"
-                                    :options="genderData"
-                                    :class="{ 'is-invalid': submitted && $v.dataStudent.gender.$error }" 
-                                ></multiselect>
-                                <div
-                                v-if="submitted && !$v.dataStudent.gender.required"
-                                class="invalid-feedback"
-                                >Jenis Kelamin is required.</div>
-                            </div>
-                        </div>
-
-                        <div class="col-md-4" v-if="!isNimNotAvailable">
-                            <div class="form-group">
-                                <label class="control-label">Agama</label>
-                                <multiselect
-                                    v-model="dataStudent.religion"
-                                    :disabled="isNimNotAvailable"
-                                    :options="religionData"
-                                    :class="{ 'is-invalid': submitted && $v.dataStudent.religion.$error }" 
-                                ></multiselect>
+                            <label class="control-label">Agama</label>
+                            <multiselect
+                                v-model="dataStudent.religion"
+                                :options="religionData"
+                                :class="{ 'is-invalid': submitted && $v.dataStudent.religion.$error }" 
+                            ></multiselect>
                                 <div
                                 v-if="submitted && !$v.dataStudent.religion.required"
                                 class="invalid-feedback"
@@ -592,7 +583,7 @@ export default {
                                     :disabled="true"
                                     id="semester"
                                     name="semester"
-                                    type="text"
+                                    type="number"
                                     style="background-color: #F0F4F6;"
                                     class="form-control"
                                     :class="{ 'is-invalid': submitted && $v.dataStudent.semester.$error }"

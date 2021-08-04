@@ -4,10 +4,11 @@ import { layoutComputed } from "@/state/helpers";
 
 import Topbar from "@/components/topbar";
 import SideBar from "@/components/side-bar";
+import Rightsidebar from "@/components/right-sidebar";
 import Footer from "@/components/footer";
 
 export default {
-  components: { Topbar, SideBar, Footer },
+  components: { Topbar, SideBar, Rightsidebar, Footer },
   data() {
     return {
       isMenuCondensed: false,
@@ -40,6 +41,12 @@ export default {
         document.body.classList.remove("vertical-collpsed");
       }
       this.isMenuCondensed = !this.isMenuCondensed;
+    },
+    toggleRightSidebar() {
+      document.body.classList.toggle("right-bar-enabled");
+    },
+    hideRightSidebar() {
+      document.body.classList.remove("right-bar-enabled");
     },
   },
   mounted() {
@@ -89,6 +96,7 @@ export default {
         </div>
         <Footer />
       </div>
+      <Rightsidebar />
     </div>
   </div>
 </template>
