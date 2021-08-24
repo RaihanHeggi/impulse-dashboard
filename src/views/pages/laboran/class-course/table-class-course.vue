@@ -1,6 +1,6 @@
 <script>
 import { notificationMethods } from "@/state/helpers";
-import { api } from '@/api';
+import * as api from '@/api';
 import Swal from "sweetalert2";
 import Multiselect from "vue-multiselect";
 
@@ -17,27 +17,37 @@ export default {
   data() {
     return {
       //list class-course
-      isFentchingData: false,
+      isFetchingData: false,
       dataClassCourses: [],
       dataTable: [],
       totalRows: 1,
       currentPage: 1,
       perPage: 10,
       pageOptions: [10, 25, 50, 100],
-      filter: "",
+      filter_search: "",
       filterOn: [],
       sortBy: "class.name",
       sortDesc: false,
       fields: [
-        { key: "class.name", label: "Nama Kelas" },
-        { key: "course.name", label: "Nama MK" },
-        { key: "staff.name", label: "Nama Dosen" },
-        { key: "academic_year.semester", label: "Semester" },
-        { key: "academic_year.name", label: "Tahun Akademik" },
+        { key: "class.name", sortable: true, label: "Nama Kelas" },
+        { key: "course.name", sortable: true, label: "Nama MK" },
+        { key: "staff.name", sortable: true, label: "Nama Dosen" },
+        { key: "academic_year.semester", sortable: true, label: "Semester" },
+        { key: "academic_year.name", sortable: true, label: "Tahun Akademik" },
         { key: "action", sortable: false }
       ],
 
-      namaKelasData: [],
+      class_name: "",
+      course_name: "",
+      academic_year_id: "",
+      course_data: "",
+      class_data: "",
+      dataDropdown:{
+          classes: [],
+          courses: [],
+          staffs: [],
+          academic_year: [],
+      },
     };
   },
   computed: {
@@ -48,15 +58,18 @@ export default {
       return this.totalRows;
     },
     datas() {
-      return this.dataTable;
+      return this.dataClassCourses;
     },
     notification() {
       return this.$store ? this.$store.state.notification : null;
     },
   },
-  mounted() {
+  mounted: async function() {
     // Set the initial number of items
-    this.fetchData();
+    this.loading();
+    await this.fetchData().then(result=>{
+        this.loading();
+    });
     this.loadDataDropdown();
   },
   methods: {
@@ -69,22 +82,31 @@ export default {
       this.totalRows = filteredItems.length;
       this.currentPage = 1;
     },
-    getRequestParams(kelas) {
+    getRequestParams(class_name, course_name, academic_year_id) {
       let params = {};
 
-      if (kelas) {
-        params["kelas"] = kelas;
+      if (class_name) {
+        params["class_name"] = class_name;
+      }
+
+      if (course_name) {
+        params["course_name"] = course_name;
+      }
+
+      if (academic_year_id) {
+        params["academic_year_id"] = academic_year_id;
       }
 
       return params;
     },
     fetchData(){
       this.loadDataDropdown();
-      this.isFentchingData = true;
-      console.log("fentching data")
+      this.isFetchingData = true;
 
       const params = this.getRequestParams(
-        this.filter,
+        this.class_name,
+        this.course_name,
+        this.academic_year_id,
       );
 
       return (
@@ -93,86 +115,107 @@ export default {
             if (response.data.data){
               this.totalRows = response.data.data.length;
               this.dataClassCourses = response.data.data;
-              this.setData(this.dataClassCourses);
             }
-            this.isFentchingData = false;
+            this.isFetchingData = false;
           })
           .catch(error => {
-            console.log(error)
-            this.isFentchingData = false;
+            this.isFetchingData = false;
+
+            Swal.fire({
+                icon: 'error',
+                title: 'Oops...',
+                text: 'Something went wrong!',
+                footer: error
+            })
           })
       )
     },
 
-    setData(dataClassCourses){
-        //paginate
-        this.dataTable = this.paginate(dataClassCourses);
+    async loadDataDropdown(){
+        this.getDataDropdown();
     },
 
-    paginate(array) {
-        const start = this.currentPage * this.perPage - this.perPage;
-        const end = start + this.perPage;
-        return array.slice(start, end);
-    },
-
-    setKelas(value) {
-      this.filter = value.name;
-      this.fetchData();
-    },
-
-    removeKelas() {
-      this.filter = "";
-      this.fetchData();
-    },
-
-    loadDataDropdown(){
-        this.getClassroomNames();
-    },
-
-    getClassroomNames(){
+    async getDataDropdown(){
         return (
-            api.getByNameClassrooms()
+            api.getClassCourseStaffYear()
             .then(response => {
-                if(response.data.classes){
-                    this.namaKelasData = response.data.classes;
+                if(response.data.data){
+                    this.setDataDropdown(response.data.data);
                 }
             })
             .catch(error => {
-                console.log(error)
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Oops...',
+                    text: 'Something went wrong!',
+                    footer: error
+                })
             })
         )
     },
 
-    handlePageChange(value) {
-      this.currentPage = value;
-      this.fetchData();
+    setDataDropdown(data){
+        data.academic_year.forEach((element, index, array) => {
+            element.year = String(element.year) + " / " + String(element.semester)
+        });
+        this.dataDropdown = data;
     },
 
-    handlePageSizeChange(value) {
+    async selectKelas(value){
+        this.class_name = value.name;
+        this.loading();
+        await this.fetchData().then(result=>{
+            this.loading();
+        });
+    },
+
+    async removeKelas(){
+        this.class_name = "";
+        this.loading();
+        await this.fetchData().then(result=>{
+            this.loading();
+        });
+    },
+
+    async selectCourse(value){
+        this.course_name = value.name;
+        this.loading();
+        await this.fetchData().then(result=>{
+            this.loading();
+        });
+    },
+
+    async removeCourse(){
+        this.course_name = "";
+        this.loading();
+        await this.fetchData().then(result=>{
+            this.loading();
+        });
+    },
+
+    async handlePageChange(value) {
+      this.currentPage = value;
+      this.loading();
+      await this.fetchData().then(result=>{
+          this.loading();
+      });
+    },
+
+    async handlePageSizeChange(value) {
       this.perPage = value;
       this.currentPage = 1;
-      this.fetchData();
+      this.loading();
+      await this.fetchData().then(result=>{
+          this.loading();
+      });
     },
 
-    handleSortingChange(value){
-      if(value.sortBy !== this.sortBy) {
-        this.sortDesc = false
-      } 
-      else {
-        if(this.sortDesc) {
-          this.sortDesc = false
-        } 
-        else {
-          this.sortDesc = true
-        }
-      }
-      this.sortBy = value.sortBy;
-      this.fetchData();
-    },
-
-    refreshData(){
+    async refreshData(){
       this.filter = "";
-      this.fetchData();
+      this.loading();
+      await this.fetchData().then(result=>{
+          this.loading();
+      });
     },
 
     onClickDelete(data){
@@ -191,17 +234,19 @@ export default {
       });
     },
 
-    deleteClassCourse(id, class_name, course_name){
+    async deleteClassCourse(id, class_name, course_name){
       return (
         api.deleteClassCourse(id)
           .then(response => {
             Swal.fire("Deleted!", class_name + " | " + course_name + " has been deleted.", "success");
-            this.fetchData();
+            this.loading();
+            this.fetchData().then(result=>{
+                this.loading();
+            });
           })
           .catch(error => {
-            console.log(error)
             Swal.fire({
-              type: 'error',
+              icon: 'error',
               title: 'Oops...',
               text: 'Something went wrong!',
               footer: error
@@ -209,12 +254,30 @@ export default {
           })
       )
     },
+
+    loading() {
+      if(this.isLoading){
+        this.isLoading = false;
+      } else{
+        this.isLoading = true;
+      }
+
+      var x = document.getElementById("loading");
+      if (x.style.display === "none") {
+        x.style.display = "block";
+      } else {
+        x.style.display = "none";
+      }
+    },
   }
 };
 </script>
 
 <template>
   <div>
+    <div id="loading" style="display:none; z-index:100; position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%);">
+      <b-spinner style="width: 3rem; height: 3rem;" class="m-2" variant="warning" role="status"></b-spinner>
+    </div>
     <div class="row mt-4">
       <div class="col-sm-12 col-md-12">
         <label class="d-inline-flex align-items-center">
@@ -226,12 +289,25 @@ export default {
           <div class="form-group">
             <multiselect
                 placeholder="Kelas"
-                v-model="filter"
-                :options="namaKelasData"
+                v-model="class_data"
+                :options="dataDropdown.classes"
                 label="name"
                 track-by="name"
-                @select="setKelas"
+                @select="selectKelas"
                 @remove="removeKelas"
+            ></multiselect>
+          </div>
+        </div>
+        <div class="col-sm-12 col-md-3">
+          <div class="form-group">
+            <multiselect
+                placeholder="Mata Kuliah"
+                v-model="course_data"
+                :options="dataDropdown.courses"
+                label="name"
+                track-by="name"
+                @select="selectCourse"
+                @remove="removeCourse"
             ></multiselect>
           </div>
         </div>
@@ -251,6 +327,20 @@ export default {
           </label>
         </div>
       </div>
+      <!-- Search -->
+      <div class="col-sm-12 col-md-6">
+        <div id="tickets-table_filter" class="dataTables_filter text-md-right">
+          <label class="d-inline-flex align-items-center">
+            Search:
+            <b-form-input
+              v-model="filter_search"
+              type="search"
+              class="form-control form-control-sm ml-2"
+            ></b-form-input>
+          </label>
+        </div>
+      </div>
+      <!-- End search -->
     </div>
     <div class="table-responsive">
       <b-table
@@ -259,12 +349,12 @@ export default {
         :items="datas"
         :fields="fields"
         responsive="sm"
-        :per-page="0"
-        :busy.sync="isFentchingData"
+        :per-page="perPage"
+        :busy.sync="isFetchingData"
         :current-page="currentPage"
-        @sort-changed="handleSortingChange"
         :sort-by="sortBy"
         :sort-desc="sortDesc"
+        :filter="filter_search"
         :filter-included-fields="filterOn"
         @filtered="onFiltered"
         :headVariant="'dark'"

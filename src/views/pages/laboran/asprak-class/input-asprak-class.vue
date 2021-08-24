@@ -2,7 +2,7 @@
 import Multiselect from "vue-multiselect";
 import { required } from "vuelidate/lib/validators";
 import { notificationMethods } from "@/state/helpers";
-import { api } from '@/api';
+import * as api from '@/api';
 import Swal from "sweetalert2";
 import store from '@/store';
 
@@ -49,7 +49,7 @@ export default {
       isInputError: false,
       inputSuccess: false,
       isInputCanceled: false,
-      isFentchingData: false,
+      isFetchingData: false,
       isKelasNotSelected: true,
 
       //mahasiswa
@@ -116,13 +116,12 @@ export default {
                 .catch(error => {
                     //pop up
                     this.submitted = false;
-                    console.log(error.response)
                     this.tryingToInput = false;
                     this.inputError = error;
                     this.isInputError = true;
 
                     Swal.fire({
-                        type: 'error',
+                        icon: 'error',
                         title: 'Oops...',
                         text: 'Something went wrong!',
                         footer: error
@@ -187,7 +186,12 @@ export default {
                 }
             })
             .catch(error => {
-                console.log(error)
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Oops...',
+                    text: 'Something went wrong!',
+                    footer: error
+                })
             })
         )
     },
@@ -203,7 +207,12 @@ export default {
                 }
             })
             .catch(error => {
-                console.log(error)
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Oops...',
+                    text: 'Something went wrong!',
+                    footer: error
+                })
             })
     },
 
@@ -220,13 +229,23 @@ export default {
                         }
                     })
                     .catch(error => {
-                        console.log(error)
+                        Swal.fire({
+                            icon: 'error',
+                            title: 'Oops...',
+                            text: 'Something went wrong!',
+                            footer: error
+                        })
                     })
                 if (index === array.length -1) resolve();
             });
         })
         .catch(error => {
-            console.log(error)
+            Swal.fire({
+                icon: 'error',
+                title: 'Oops...',
+                text: 'Something went wrong!',
+                footer: error
+            })
         });
     },
 
@@ -247,7 +266,12 @@ export default {
                 }
             })
             .catch(error => {
-                console.log(error)
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Oops...',
+                    text: 'Something went wrong!',
+                    footer: error
+                })
             });
     },
 
@@ -256,7 +280,7 @@ export default {
     },
 
     async setKelas(value){
-        this.isFentchingData = true;
+        this.isFetchingData = true;
 
         this.removeCourse();
         this.dataStudent.class_name = value.name;
@@ -264,17 +288,17 @@ export default {
         await this.getDataCourses(this.kelasData);
 
         this.isKelasNotSelected = false;
-        this.isFentchingData = false;
+        this.isFetchingData = false;
     },
 
     async setCourse(value){
-        this.isFentchingData = true;
+        this.isFetchingData = true;
 
         this.dataStudent.course_name = value.name;
         this.dataStudent.course_code = value.code;
         await this.setDataClassroom(this.kelasData, value.id);
 
-        this.isFentchingData = false;
+        this.isFetchingData = false;
     },
 
     removeKelas(){
