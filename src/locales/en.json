@@ -46,10 +46,12 @@
       "list": {
         "student": "Student Data",
         "studentclass": "Student Class",
+        "asprakclass": "Asprak Class",
         "staff": "Staff Data",
         "course": "Course Data",
         "classroom": "Classroom Data",
-        "class-course": "Class Course",
+        "room": "Room Data",
+        "class-course": "Course Class",
         "create-test": "Create Test"
       }
     },
@@ -59,9 +61,8 @@
     "aslab": {
       "text": "Asisten Lab",
       "list":{
-        "jadwal": "Jadwal",
-        "kalender": "Kalender",
-        "inputjadwal":"Input Jadwal"
+        "jadwal": "Schedule",
+        "kalender": "Calendar"
       }
     },
     "asprak": {

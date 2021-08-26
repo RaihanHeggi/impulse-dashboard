@@ -109,6 +109,14 @@ export default [
         component: () => import('../views/pages/laboran/classroom/classroom')
     },
     {
+        path: '/laboran/room',
+        name: 'laboran-room',
+        meta: {
+            authRequired: true,
+        },
+        component: () => import('../views/pages/laboran/room/room')
+    },
+    {
         path: '/laboran/class-course',
         name: 'laboran-classcourse',
         meta: {
@@ -116,15 +124,13 @@ export default [
         },
         component: () => import('../views/pages/laboran/class-course/class-course')
     },
-    
-    //path temp
     {
-        path: '/temp/create-test',
-        name: 'create-test',
+        path: '/laboran/asprak-class',
+        name: 'laboran-asprakclass',
         meta: {
             authRequired: true,
         },
-        component: () => import('../views/pages/temp/create-test')
+        component: () => import('../views/pages/laboran/asprak-class/asprak-class')
     },
 
     //aslab
