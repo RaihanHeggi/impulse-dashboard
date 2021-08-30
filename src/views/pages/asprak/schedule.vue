@@ -43,7 +43,7 @@ export default {
       title: "Schedule",
       items: [
         {
-          text: "Asisten Lab",
+          text: "Asisten Praktikum",
           href: "/"
         },
         {
@@ -61,7 +61,7 @@ export default {
       pageOptions: [10, 25, 50, 100],
       filter_search: "",
       filterOn: [],
-      sortBy: "title",
+      sortBy: "class_course.class.name",
       sortDesc: false,
       fields: [
         { key: "title", sortable: true, label: "Name" },
@@ -317,7 +317,7 @@ export default {
 
     editModal(){
       this.$router.push({
-          name: 'aslab-schedule-input', 
+          name: 'asprak-schedule-detail', 
           params: { id: this.schedule_data.id }
       });
     },
@@ -444,7 +444,7 @@ export default {
                     @click=onClickEdit(data)
                     class="mr-3 text-primary"
                     v-b-tooltip.hover
-                    title="Edit"
+                    title="Detail"
                 >
                     <i class="mdi mdi-pencil font-size-18"></i>
                 </a>
@@ -587,7 +587,7 @@ export default {
             type="button"
             @click="editModal"
             class="btn btn-info mr-2 waves-effect waves-light"
-            >Edit</button>
+            >Detail</button>
             <button type="button" @click="closeModal" class="btn btn-light waves-effect">Close</button>
         </div>
       </div>
