@@ -68,5 +68,21 @@ export const staffItems = [
         icon: 'ri-home-6-line',
         link: 'laboran-room'
     },
-    
+    {
+        id: 13,
+        label: 'menuitems.laboran.list.academic-year',
+        icon: 'fas fa-ribbon',
+        link: 'laboran-academicyear'
+    },
+    {
+        id: 14,
+        label: "menuitems.laboran.absensi-data",
+        isTitle: true
+    },
+    {
+        id: 15,
+        label: 'menuitems.laboran.list.bap',
+        icon: 'ri-account-circle-line',
+        link: 'laboran-bap'
+    },
 ]

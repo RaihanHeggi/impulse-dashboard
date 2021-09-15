@@ -227,3 +227,43 @@ export function deleteAsprakClass(id) {
 export function showAsprakClass(id) {
     return httpAxios.get(`/classcourse/asprak/${id}`);
 }
+
+//academic year
+export function getAllAcademicYears() {
+    return httpAxios.get('/academicYear')
+}
+export function deleteAcademicYear(id) {
+    return httpAxios.delete(`/academicYear/${id}`);
+}
+export function inputAcademicYear(data){
+    return httpAxios({
+        url: '/academicYear',
+        method: 'POST',
+        data: data
+    })
+}
+export function editAcademicYear(id, data){
+    return httpAxios({
+        url: `/academicYear/${id}`,
+        method: 'PUT',
+        data: data
+    })
+}
+
+//bap
+export function getListBap(params) {
+    return httpAxios.get('/laboran/bap/show', { params })
+}
+export function showBap(schedule_id) {
+    return httpAxios.get(`/laboran/bap/show/${schedule_id}`);
+}
+export function infoBap(schedule_id) {
+    return httpAxios.get(`/laboran/bap/${schedule_id}`);
+}
+export function inputBap(schedule_id, data){
+    return httpAxios({
+        url: `/laboran/bap/${schedule_id}`,
+        method: 'POST',
+        data: data
+    })
+}
