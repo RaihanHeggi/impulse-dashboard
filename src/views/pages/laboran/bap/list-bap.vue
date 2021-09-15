@@ -1,5 +1,5 @@
 <script>
-import Layout from "../../layouts/main";
+import Layout from "../../../layouts/main";
 import PageHeader from "@/components/page-header";
 
 import * as api from '@/api';
@@ -41,19 +41,17 @@ export default {
   },
   data() {
     return {
-      title: "Schedule",
+      title: "Berita Acara Praktikum",
       items: [
         {
-          text: "Asisten Praktikum",
+          text: "Laboran",
           href: "/"
         },
         {
-          text: "Schedule",
+          text: "BAP",
           active: true,
         },
       ],
-
-      asprak_id: store.getters.getLoggedUser.id,
 
       //list class-course
       isFetchingData: false,
@@ -73,7 +71,7 @@ export default {
         { key: "date", sortable: true, label: "Tanggal" },
         { key: "start", sortable: true, label: "Jam Mulai" },
         { key: "end", sortable: true, label: "Jam Terakhir" },
-        { key: "room.name", sortable: true, label: "Ruangan" },
+        { key: "class_course.staff.code", sortable: true, label: "Kode Dosen" },
         { key: "action", sortable: false }
       ],
 
@@ -88,47 +86,6 @@ export default {
           staffs: [],
           academic_year: [],
       },
-      schedule_data: {
-        id: "",
-        title: "",
-        start: "",
-        end: "",
-        room: {
-          name: "",
-        },
-        class_course: {
-          id: "",
-          class: {
-            name: "",
-          },
-          course: {
-            name: "",
-          },
-          staff: {
-            name: "",
-          },
-        },
-        module: {
-          index: "",
-        },
-        academic_year: {
-          year: "",
-          semester: "",
-        },
-        date: ""
-      },
-      class_course_data: {
-        class: {
-          name: "",
-        },
-        course: {
-          name: "",
-        },
-        academic_year: {
-          name: "",
-        }
-      },
-      eventModal: false,
     };
   },
   methods: {
@@ -139,7 +96,7 @@ export default {
       this.totalRows = filteredItems.length;
       this.currentPage = 1;
     },
-    getRequestParams(class_name, course_name, academic_year_id, asprak_id) {
+    getRequestParams(class_name, course_name, academic_year_id) {
       let params = {};
 
       if (class_name) {
@@ -154,10 +111,6 @@ export default {
         params["academic_year_id"] = academic_year_id;
       }
 
-      if (asprak_id) {
-        params["asprak_id"] = asprak_id;
-      }
-
       return params;
     },
     async fetchData(){
@@ -168,11 +121,10 @@ export default {
         this.class_name,
         this.course_name,
         this.academic_year_id,
-        this.asprak_id,
       );
 
       return (
-        api.getAllSchedules(params)
+        api.getListBap(params)
           .then(response => {
             if (response.data.data){
               this.totalRows = response.data.data.length;
@@ -272,62 +224,16 @@ export default {
         });
     },
 
-    async getClassCourse(id){
-      return (
-        api.showClassCourse(id)
-          .then(response => {
-            if(response.data.data){
-              this.class_course_data = response.data.data;
-              this.class_course_data.academic_year.name = String(this.class_course_data.academic_year.name) + " / " + String(this.class_course_data.academic_year.semester);
-            }
-          })
-          .catch(error => {
-              Swal.fire({
-                  icon: 'error',
-                  title: 'Oops...',
-                  text: 'Something went wrong!',
-                  footer: error
-              })
-          })
-      );
-    },
-
     /**
      * Modal open for deta event
      */
     async onClickEdit(data) {
-      //set data
-      await this.getClassCourse(data.item.class_course.id);
-
-      this.schedule_data.id = data.item.id;
-      this.schedule_data.title = data.item.title;
-      this.schedule_data.room = data.item.room;
-      this.schedule_data.class_course = data.item.class_course;
-      this.schedule_data.module = data.item.module;
-      this.schedule_data.academic_year = data.item.academic_year;
-      if(!data.item.start){
-        this.schedule_data.start = "empty";
-        this.schedule_data.end = "empty";
-        this.schedule_data.date = moment(String(data.item.date)).format('YYYY-MM-DD');
-      } 
-      else{
-        this.schedule_data.start = moment(String(data.item.start)).format('YYYY-MM-DD HH:mm:ss');
-        this.schedule_data.end = moment(String(data.item.end)).format('YYYY-MM-DD HH:mm:ss');
-        this.schedule_data.date = moment(String(data.item.date)).format('YYYY-MM-DD');
+      if(data.item.is_present){
+        this.$router.push({
+            name: 'laboran-bap-detail', 
+            params: { id: data.item.id }
+        });
       }
-
-      this.eventModal = true;
-    },
-
-    closeModal() {
-      this.eventModal = false;
-    },
-
-    editModal(){
-      this.$router.push({
-          name: 'asprak-schedule-detail', 
-          params: { id: this.schedule_data.id }
-      });
     },
 
     loading() {
@@ -447,24 +353,14 @@ export default {
                 :headVariant="'dark'"
             >
                 <template v-slot:cell(action)="data">
-                  <a
-                      href="javascript:void(0);"
-                      @click=onClickEdit(data)
-                      class="mr-3 text-primary"
-                      v-b-tooltip.hover
-                      title="Info"
-                  >
-                      <i class="mdi mdi-eye-outline font-size-18"></i>
-                  </a>
-                  <a
-                      href="javascript:void(0);"
-                      @click=editModal
-                      class="mr-3 text-primary"
-                      v-b-tooltip.hover
-                      title="Detail"
-                  >
-                      <i class="mdi mdi-pencil font-size-18"></i>
-                  </a>
+                    <b-button
+                        v-if="data.item.is_present" 
+                        type="submit" 
+                        variant="primary"
+                        @click=onClickEdit(data)
+                        style="min-width: 75px;" 
+                        >Show
+                    </b-button>
                 </template>
             </b-table>
             </div>
@@ -485,129 +381,5 @@ export default {
             </div>
         </div>
     </div>
-    <!-- Edit Modal -->
-    <b-modal
-      size="lg"
-      v-model="eventModal"
-      title="Info Schedule"
-      hide-footer 
-      title-class="font-18"
-    >
-      <div class="tab-pane col-sm-12 col-md-12" id="metadata">
-        <div>
-            <div class="form-group">
-                <label>Title</label>
-                <input
-                    v-model="schedule_data.title"
-                    type="text"
-                    class="form-control"
-                    disabled="true"
-                />
-            </div>
-        </div>
-        <div class="row">
-          <div class="col-sm-9">
-              <div class="form-group">
-                  <label>Kelas</label>
-                  <input
-                      v-model="class_course_data.class.name"
-                      type="text"
-                      class="form-control"
-                      disabled="true"
-                  />
-              </div>
-          </div>
-          <div class="col-sm-3">
-              <div class="form-group">
-                  <label>Tahun / Semester</label>
-                  <input
-                      v-model="class_course_data.academic_year.name"
-                      type="text"
-                      class="form-control"
-                      disabled="true"
-                  />
-              </div>
-          </div>
-        </div>
-        <div class="row">
-          <div class="col-sm-9">
-              <div class="form-group">
-                  <label>Mata Kuliah</label>
-                  <input
-                      v-model="class_course_data.course.name"
-                      type="text"
-                      class="form-control"
-                      disabled="true"
-                  />
-              </div>
-          </div>
-          <div class="col-sm-3">
-              <div class="form-group">
-                  <label>Module</label>
-                  <input
-                      v-model="schedule_data.module.index"
-                      type="text"
-                      class="form-control"
-                      disabled="true"
-                  />
-              </div>
-          </div>
-        </div>
-        <div>
-            <div class="form-group">
-                <label>Room</label>
-                <input
-                    v-model="schedule_data.room.name"
-                    type="text"
-                    class="form-control"
-                    disabled="true"
-                />
-            </div>
-        </div>
-        <div>
-            <div class="form-group">
-                <label>Date</label>
-                <input
-                    v-model="schedule_data.date"
-                    type="text"
-                    class="form-control"
-                    disabled="true"
-                />
-            </div>
-        </div>
-        <div class="row">
-          <div class="col-sm-6">
-              <div class="form-group">
-                  <label>Start</label>
-                  <input
-                      v-model="schedule_data.start"
-                      type="text"
-                      class="form-control"
-                      disabled="true"
-                  />
-              </div>
-          </div>
-          <div class="col-sm-6">
-              <div class="form-group">
-                  <label>End</label>
-                  <input
-                      v-model="schedule_data.end"
-                      type="text"
-                      class="form-control"
-                      disabled="true"
-                  />
-              </div>
-          </div>
-        </div>
-        <!-- <div class="text-right mt-4">
-            <button
-            type="button"
-            @click="editModal"
-            class="btn btn-info mr-2 waves-effect waves-light"
-            >Detail</button>
-            <button type="button" @click="closeModal" class="btn btn-light waves-effect">Close</button>
-        </div> -->
-      </div>
-    </b-modal>
   </Layout>
 </template>
