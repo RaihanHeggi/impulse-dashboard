@@ -190,13 +190,13 @@ export default {
 
     onClickDelete(data){
       Swal.fire({
-          title: "Are you sure?",
-          text: data.item.code + " will be deleted!",
+          title: "Anda yakin?",
+          text: data.item.code + " akan dihapus!",
           icon: "warning",
           showCancelButton: true,
           confirmButtonColor: "#34c38f",
           cancelButtonColor: "#f46a6a",
-          confirmButtonText: "Yes, delete it!"
+          confirmButtonText: "Ya, hapus!"
       }).then(result => {
           if (result.value) {
               this.deleteCourse(data.item.id, data.item.code);
@@ -208,7 +208,7 @@ export default {
       return (
         api.deleteCourse(id)
           .then(response => {
-            Swal.fire("Deleted!", code + " has been deleted.", "success");
+            Swal.fire("Berhasil dihapus!", code + " telah terhapus.", "success");
             this.loading();
             this.fetchData().then(result=>{
                 this.loading();
@@ -400,7 +400,7 @@ export default {
                     <div
                     v-if="submitted && !$v.dataEdit.code.required"
                     class="invalid-feedback"
-                    >Kode Mata Kuliah is required.</div>
+                    >Kode Mata Kuliah harus diisi!</div>
                 </div>
             </div>
             <div class="col-sm-12">
@@ -417,15 +417,15 @@ export default {
                     <div
                     v-if="submitted && !$v.dataEdit.name.required"
                     class="invalid-feedback"
-                    >Nama Mata Kuliah is required.</div>
+                    >Nama Mata Kuliah harus diisi!</div>
                 </div>
             </div>
             <div class="text-center mt-4">
                 <button
                 type="submit"
                 class="btn btn-primary mr-2 waves-effect waves-light"
-                >Save Changes</button>
-                <button type="button" @click="hideModal" class="btn btn-light waves-effect">Cancel</button>
+                >Simpan</button>
+                <button type="button" @click="hideModal" class="btn btn-light waves-effect">Batalkan</button>
             </div>
           </div>
         </form>
