@@ -169,6 +169,7 @@ export default {
             api.showSchedule(schedule_id)
                 .then(response => {
                     if(response.data.data){
+                        this.schedule_test_data = response.data.data;
                         return true;
                     }
                     else{
@@ -388,20 +389,17 @@ export default {
         },
 
         onClickDownload(){
+            this.loading();
             return (
-                api.downloadJournal(this.schedule_test_data.schedule.module_id, this.schedule_test_data.test.id)
+                api.downloadJournal(this.schedule_test_data.module.id, this.schedule_test_data.module.journal_id)
                 .then(response => {
                     let blob = new Blob([response.data])
                     let link = document.createElement('a')
                     link.href = window.URL.createObjectURL(blob)
                     link.download = this.test_data.test.questions[0].question
-                    link.click()
-<<<<<<< Updated upstream
-=======
-                    
+                    link.click()          
                     this.loading();
                     Swal.fire("Berhasil diunduh!", "File telah terunduh.", "success");
->>>>>>> Stashed changes
                 })
                 .catch(error => {
                     Swal.fire({

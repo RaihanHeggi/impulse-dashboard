@@ -195,8 +195,7 @@ export default {
                 text: 'Cek kembali kesesuaian deskripsi.',
             })
           });
-<<<<<<< Updated upstream
-=======
+          
           this.on('success', function(file, response){
             Swal.fire({
                 icon: 'success',
@@ -204,7 +203,6 @@ export default {
                 text: 'File telah terunggah.',
             })
           })
->>>>>>> Stashed changes
         }
       }
 
@@ -515,6 +513,7 @@ export default {
       //load data
       if(value == "Journal"){
         this.selected_type = "Upload File";
+        this.dataTest.type = "file";
         this.test_id = this.schedule_data.module.journal_id;
         this.dataTest.test_type = "journal";
       }
@@ -836,6 +835,7 @@ export default {
     },
 
     onClickDownload(){
+        this.loading();
         return (
             api.downloadJournal(this.schedule_data.module.id, this.test_id)
             .then(response => {
@@ -844,12 +844,8 @@ export default {
                 link.href = window.URL.createObjectURL(blob)
                 link.download = this.dataTest.questions[0].text
                 link.click()
-<<<<<<< Updated upstream
-=======
-
                 this.loading();
                 Swal.fire("Berhasil diunduh!", "File telah terunduh.", "success");
->>>>>>> Stashed changes
             })
             .catch(error => {
                 Swal.fire({
@@ -1252,7 +1248,7 @@ export default {
                                                                 <b-button 
                                                                 size="sm" 
                                                                 class="mt-1 mr-1" 
-                                                                style="width: 85%; text-align: center; vertical-align: middle;"
+                                                                style="width: 100%; text-align: center; vertical-align: middle;"
                                                                 variant="light"
                                                                 >{{String.fromCharCode(idx+1 + 64)}}
                                                                 </b-button>
@@ -1260,7 +1256,7 @@ export default {
                                                                 v-if="idx != 0 && idx != 1"
                                                                 size="sm" 
                                                                 class="mt-1 mr-1" 
-                                                                style="width: 85%; text-align: center; vertical-align: middle;" 
+                                                                style="width: 100%; text-align: center; vertical-align: middle;" 
                                                                 variant="danger"
                                                                 v-on:click="removeAnswer(question, idx)"
                                                                 >remove
@@ -1398,7 +1394,7 @@ export default {
                                               - Pastikan mengisi form <b>Bobot Nilai</b> dan <b>URL Upload Jawaban</b> terlebih dahulu,<br>
                                               - Form <b>URL Upload Jawaban</b> digunakan untuk praktikan mengunggah jawaban tes Jurnal,<br>
                                               - <b>File Soal</b> yang dapat diunggah bertipe <b>.PDF</b>, <b>.DOC</b>, <b>.DOCX</b>, <b>.RAR</b>, atau <b>.ZIP</b>,<br>
-                                              - Batas ukuran <b>File Soal</b> adalah <b>5 MB</b>,<br>
+                                              - Batas ukuran <b>File Soal</b> adalah <b>2 MB</b>,<br>
                                               - Data tersimpan setelah <b>Upload File Soal Jurnal</b> berhasil tanpa error,<br>
                                               - Unggah file kembali untuk memperbarui <b>File Soal</b>, <b>Bobot Nilai</b>, dan <b>URL Upload Jawaban</b>.
                                               <!-- - Pastikan hanya ada <b>satu sheet</b>,<br>
