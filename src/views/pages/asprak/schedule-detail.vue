@@ -191,11 +191,20 @@ export default {
             console.log(response)
             Swal.fire({
                 icon: 'error',
-                title: 'Failed to upload your file!',
+                title: 'Gagal mengunggah file!',
                 text: 'Cek kembali kesesuaian deskripsi.',
-                footer: response
             })
           });
+<<<<<<< Updated upstream
+=======
+          this.on('success', function(file, response){
+            Swal.fire({
+                icon: 'success',
+                title: 'Berhasil diunggah!',
+                text: 'File telah terunggah.',
+            })
+          })
+>>>>>>> Stashed changes
         }
       }
 
@@ -408,13 +417,13 @@ export default {
 
     cancelSubmit(){
       Swal.fire({
-          title: "Are you sure?",
-          text: "the form that you have filled in will be reset!",
+          title: "Anda yakin?",
+          text: "Form yang telah terisi akan dikosongkan!",
           icon: "warning",
           showCancelButton: true,
           confirmButtonColor: "#34c38f",
           cancelButtonColor: "#f46a6a",
-          confirmButtonText: "Yes, cancel it!"
+          confirmButtonText: "Ya, batalkan!"
       }).then(result => {
           if (result.value) {
               this.loading();
@@ -423,7 +432,7 @@ export default {
               this.loadData().then(result=>{
                 this.loading();
               });
-              Swal.fire("Canceled!", "The form has been reset.", "success");
+              Swal.fire("Berhasil dibatalkan!", "Form telah dikosongkan.", "success");
           }
       });
     },
@@ -692,7 +701,7 @@ export default {
             
                 if (this.inputTestSuccess) {
                     this.submitted_test = false;
-                    Swal.fire("Submitted!", "The form submitted successfully.", "success");
+                    Swal.fire("Berhasil submit!", "Form telah berhasil di submit.", "success");
                 }
             })
             .catch(error => {
@@ -743,7 +752,7 @@ export default {
             showCancelButton: true,
             confirmButtonColor: "#34c38f",
             cancelButtonColor: "#f46a6a",
-            confirmButtonText: "Yes, submit it!"
+            confirmButtonText: "Ya, lanjut submit!"
         }).then(result => {
             if (result.value) {
                 this.loading();
@@ -758,13 +767,13 @@ export default {
 
     cancelSubmitTest(){
       Swal.fire({
-          title: "Are you sure?",
-          text: "the form that you have filled in will be reset!",
+          title: "Anda yakin?",
+          text: "Form yang telah terisi akan dikosongkan!",
           icon: "warning",
           showCancelButton: true,
           confirmButtonColor: "#34c38f",
           cancelButtonColor: "#f46a6a",
-          confirmButtonText: "Yes, cancel it!"
+          confirmButtonText: "Ya, batalkan!"
       }).then(result => {
           if (result.value) {
               this.loading();
@@ -785,7 +794,7 @@ export default {
               this.isLoadedData = false;
 
               this.loading();
-              Swal.fire("Canceled!", "The form has been reset.", "success");
+              Swal.fire("Berhasil dibatalkan!", "Form telah dikosongkan.", "success");
           }
       });
     },
@@ -813,9 +822,8 @@ export default {
       this.loading();
       Swal.fire({
           icon: 'success',
-          title: 'Uploaded!',
-          text: 'Your file has been uploaded.',
-          footer: response
+          title: 'Berhasil diunggah!',
+          text: 'File telah terunggah.',
       })
       this.loadData().then(result=>{
         this.selectTest("Journal").then(rslt=>{
@@ -836,6 +844,12 @@ export default {
                 link.href = window.URL.createObjectURL(blob)
                 link.download = this.dataTest.questions[0].text
                 link.click()
+<<<<<<< Updated upstream
+=======
+
+                this.loading();
+                Swal.fire("Berhasil diunduh!", "File telah terunduh.", "success");
+>>>>>>> Stashed changes
             })
             .catch(error => {
                 Swal.fire({
@@ -919,7 +933,7 @@ export default {
           </div>
 
           <div class="form-group text-center">
-              <label>Module</label>
+              <label>Modul</label>
               <multiselect 
                 class="text-center"
                 v-model="schedule_data.module.index" 
@@ -961,7 +975,7 @@ export default {
                       class="mt-3"
                       variant="success"
                       dismissible
-                      >Canceled!</b-alert>
+                      >Berhasil dibatalkan!</b-alert>
 
                       <b-alert
                       variant="danger"
@@ -985,7 +999,7 @@ export default {
                         <div
                         v-if="submitted && !$v.schedule_data.title.required"
                         class="invalid-feedback"
-                        >Name is required.</div>
+                        >Name harus diisi!</div>
                     </div>
                     
                     <div class="form-group col-sm-6">
@@ -1003,7 +1017,7 @@ export default {
                         <div
                         v-if="submitted && !$v.schedule_data.room.id.required"
                         class="invalid-feedback"
-                        >Ruangan is required.</div>
+                        >Ruangan harus diisi!</div>
                     </div>
                   </div>
 
@@ -1023,7 +1037,7 @@ export default {
                         <div
                         v-if="submitted && !$v.time_date.required"
                         class="invalid-feedback"
-                        >Tanggal is required.</div>
+                        >Tanggal harus diisi!</div>
                     </div>
 
                     <div class="form-group col-sm-4">
@@ -1041,7 +1055,7 @@ export default {
                         <div
                         v-if="submitted && !$v.time_start.required"
                         class="invalid-feedback"
-                        >Jam Mulai is required.</div>
+                        >Jam Mulai harus diisi!</div>
                     </div>
                     
                     <div class="form-group col-sm-4">
@@ -1059,7 +1073,7 @@ export default {
                         <div
                         v-if="submitted && !$v.time_end.required"
                         class="invalid-feedback"
-                        >Jam Terakhir is required.</div>
+                        >Jam Terakhir harus diisi!</div>
                     </div>
                   </div>
 
@@ -1067,8 +1081,8 @@ export default {
                       <button
                       type="submit"
                       class="btn btn-primary mr-2 waves-effect waves-light"
-                      >Save Changes</button>
-                      <button type="button" @click="cancelSubmit" class="btn btn-light waves-effect">Cancel</button>
+                      >Simpan</button>
+                      <button type="button" @click="cancelSubmit" class="btn btn-light waves-effect">Batalkan</button>
                   </div>
                 </form>
               </template>
@@ -1096,7 +1110,7 @@ export default {
                               <div
                                 v-if="submitted_test && !$v.dataTest.test_type.required"
                                 class="invalid-feedback text-center mt-2"
-                                >Test is required.</div>
+                                >Test harus diisi!</div>
                           </div>
                           <div class="form-group text-center col-sm-6">
                               <label>Type</label>
@@ -1113,7 +1127,7 @@ export default {
                               <div
                                 v-if="submitted_test && !$v.dataTest.type.required"
                                 class="invalid-feedback text-center mt-2"
-                                >Type is required.</div>
+                                >Type harus diisi!</div>
                           </div>
                         </div>
                         <div>
@@ -1136,7 +1150,7 @@ export default {
                             class="mt-3"
                             variant="success"
                             dismissible
-                            >Canceled!</b-alert>
+                            >Berhasil dibatalkan!</b-alert>
 
                             <b-alert
                             variant="danger"
@@ -1202,7 +1216,7 @@ export default {
                                                       <div
                                                         v-if="submitted_test && !v.weight.$error.required"
                                                         class="invalid-feedback"
-                                                        >Bobot Nilai is required.</div>
+                                                        >Bobot Nilai harus diisi!</div>
                                                     </div>
                                                 </div>
                                                 <div class="col-12">
@@ -1220,7 +1234,7 @@ export default {
                                                         <div
                                                           v-if="submitted_test && !v.text.$error.required"
                                                           class="invalid-feedback"
-                                                          >Pertanyaan is required.</div>
+                                                          >Pertanyaan harus diisi!</div>
                                                     </div>
                                                 </div>
                                                 <div class="col-12">
@@ -1323,7 +1337,7 @@ export default {
                                                       <div
                                                         v-if="submitted_test && !v.weight.$error.required"
                                                         class="invalid-feedback"
-                                                        >Bobot Nilai is required.</div>
+                                                        >Bobot Nilai harus diisi!</div>
                                                     </div>
                                                 </div>
                                                 <div class="col-12">
@@ -1341,7 +1355,7 @@ export default {
                                                         <div
                                                           v-if="submitted_test && !v.text.$error.required"
                                                           class="invalid-feedback"
-                                                          >Pertanyaan is required.</div>
+                                                          >Pertanyaan harus diisi!</div>
                                                     </div>
                                                 </div>
                                                 <div class="col-12">
@@ -1476,17 +1490,17 @@ export default {
                               type="button"
                               class="btn btn-primary mr-2 waves-effect waves-light"
                               @click="submitTest"
-                            >Save Changes</button>
+                            >Simpan</button>
                             <button 
                               type="button" 
                               @click="cancelSubmitTest" 
                               class="btn btn-light waves-effect"
-                            >Cancel</button>
+                            >Batalkan</button>
                         </div>
                         <div
                           v-if="submitted_test && !$v.dataTest.module_id.required"
                           class="invalid-feedback text-center mt-2"
-                          >Module ID is required.</div>
+                          >Module ID harus diisi!</div>
                       </div>
                     </div>
                 </template>
