@@ -39,9 +39,8 @@ export default {
           this.on('success', function(file, response){
             Swal.fire({
                 icon: 'success',
-                title: 'Uploaded!',
-                text: 'Your file has been uploaded.',
-                footer: response
+                title: 'Berhasil diunggah!',
+                text: 'File telah terunggah.',
             })
           })
         }

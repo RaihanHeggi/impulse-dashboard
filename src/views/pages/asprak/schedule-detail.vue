@@ -195,7 +195,6 @@ export default {
                 text: 'Cek kembali kesesuaian deskripsi.',
             })
           });
-          
           this.on('success', function(file, response){
             Swal.fire({
                 icon: 'success',
@@ -844,6 +843,7 @@ export default {
                 link.href = window.URL.createObjectURL(blob)
                 link.download = this.dataTest.questions[0].text
                 link.click()
+
                 this.loading();
                 Swal.fire("Berhasil diunduh!", "File telah terunduh.", "success");
             })

@@ -397,7 +397,8 @@ export default {
                     let link = document.createElement('a')
                     link.href = window.URL.createObjectURL(blob)
                     link.download = this.test_data.test.questions[0].question
-                    link.click()          
+                    link.click()
+                    
                     this.loading();
                     Swal.fire("Berhasil diunduh!", "File telah terunduh.", "success");
                 })
