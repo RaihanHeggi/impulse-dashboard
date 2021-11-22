@@ -115,6 +115,7 @@ export default {
       eventModal: false,
 
       isNow: false,
+      isRuanganShowed: false,
     };
   },
   computed: {
@@ -189,7 +190,7 @@ await this.loadDataDropdown();
               Swal.fire({
                   icon: 'error',
                   title: 'Oops...',
-                  text: 'Something went wrong!',
+                  text: 'Terjadi kesalahan!',
                   footer: error
               })
           })
@@ -219,7 +220,7 @@ await this.loadDataDropdown();
               Swal.fire({
                   icon: 'error',
                   title: 'Oops...',
-                  text: 'Something went wrong!',
+                  text: 'Terjadi kesalahan!',
                   footer: error
               })
           })
@@ -301,7 +302,7 @@ await this.loadDataDropdown();
                 Swal.fire({
                     icon: 'error',
                     title: 'Oops...',
-                    text: 'Something went wrong!',
+                    text: 'Terjadi kesalahan!',
                     footer: error
                 })
             })
@@ -345,6 +346,10 @@ await this.loadDataDropdown();
         await this.fetchData().then(result=>{
             this.loading();
         });
+    },
+
+    onClickRuangan(){
+      this.isRuanganShowed = !this.isRuanganShowed;
     },
 
     loading() {
@@ -451,17 +456,6 @@ function sleep(ms) {
         </div>
         <div>
             <div class="form-group">
-                <label>Ruangan</label>
-                <input
-                    v-model="schedule_data.room.name"
-                    type="text"
-                    class="form-control"
-                    disabled="true"
-                />
-            </div>
-        </div>
-        <div>
-            <div class="form-group">
                 <label>Tanggal</label>
                 <input
                     v-model="schedule_data.date"
@@ -494,6 +488,55 @@ function sleep(ms) {
                   />
               </div>
           </div>
+        </div>
+        <div>
+            <div class="form-group">
+                <div class="row" style="margin:0!important;">
+                  <label class="mr-4">Ruangan</label>
+                  <a href="javascript:void(0)" @click="onClickRuangan" class="font-weight-bold active" v-if="!isRuanganShowed">show</a>
+                  <a href="javascript:void(0)" @click="onClickRuangan" class="font-weight-bold active" v-if="isRuanganShowed">hide</a>
+                </div>
+                <input
+                    v-model="schedule_data.room.name"
+                    type="text"
+                    class="form-control"
+                    disabled="true"
+                />
+            </div>
+        </div>
+        <div v-if="isRuanganShowed">
+            <div class="form-group">
+                <label>Deskripsi Ruangan</label>
+                <textarea
+                    v-model="schedule_data.room.desc"
+                    rows=2
+                    type="text"
+                    class="form-control"
+                    disabled="true"
+                />
+            </div>
+        </div>
+        <div v-if="isRuanganShowed">
+            <div class="form-group">
+                <label>MS Teams Link</label>
+                <input
+                    v-model="schedule_data.room.msteam_link"
+                    type="text"
+                    class="form-control"
+                    disabled="true"
+                />
+            </div>
+        </div>
+        <div v-if="isRuanganShowed">
+            <div class="form-group">
+                <label>MS Teams Code</label>
+                <input
+                    v-model="schedule_data.room.msteam_code"
+                    type="text"
+                    class="form-control"
+                    disabled="true"
+                />
+            </div>
         </div>
         <div class="text-right mt-4">
             <button

@@ -39,7 +39,8 @@ export default {
         { key: "nip", sortable: true, label: "NIP" },
         { key: "name", sortable: true, label: "Nama" },
         { key: "code", sortable: true, label: "Kode Dosen" },
-        { key: "action", sortable: false }
+        { key: "action", sortable: false },
+        { key: "manage", sortable: false, thClass: 'text-center', tdClass: 'text-center', }
       ],
 
       //modal edit
@@ -148,7 +149,7 @@ export default {
             Swal.fire({
                 icon: 'error',
                 title: 'Oops...',
-                text: 'Something went wrong!',
+                text: 'Terjadi kesalahan!',
                 footer: error
             })
           })
@@ -236,7 +237,7 @@ export default {
             Swal.fire({
               icon: 'error',
               title: 'Oops...',
-              text: 'Something went wrong!',
+              text: 'Terjadi kesalahan!',
               footer: error
             })
           })
@@ -282,12 +283,49 @@ export default {
               Swal.fire({
                 icon: 'error',
                 title: 'Oops...',
-                text: 'Something went wrong!',
+                text: 'Terjadi kesalahan!',
                 footer: error
               })
             })
         )
       }
+    },
+
+    onClickReset(data){
+      Swal.fire({
+          title: "Anda yakin?",
+          text: "Password " + data.item.nip + " akan diubah sesuai NIP!",
+          icon: "warning",
+          showCancelButton: true,
+          confirmButtonColor: "#34c38f",
+          cancelButtonColor: "#f46a6a",
+          confirmButtonText: "Ya, reset password!"
+      }).then(result => {
+          if (result.value) {
+              this.resetUserPassword(data.item.id, data.item.nip);
+          }
+      });
+    },
+
+    resetUserPassword(id, nip){
+      return (
+        api.resetUserPassword(id)
+          .then(response => {
+            Swal.fire("Berhasil diatur ulang!", "Password " + nip + " telah diubah sesuai NIP.", "success");
+            this.loading();
+            this.fetchData().then(result=>{
+                this.loading();
+            });
+          })
+          .catch(error => {
+            Swal.fire({
+              icon: 'error',
+              title: 'Oops...',
+              text: 'Terjadi kesalahan!',
+              footer: error
+            })
+          })
+      )
     },
 
     getRoles(no_induk){
@@ -302,7 +340,7 @@ export default {
               Swal.fire({
                   icon: 'error',
                   title: 'Oops...',
-                  text: 'Something went wrong!',
+                  text: 'Terjadi kesalahan!',
                   footer: error
               })
             })
@@ -355,7 +393,7 @@ export default {
               Swal.fire({
                 icon: 'error',
                 title: 'Oops...',
-                text: 'Something went wrong!',
+                text: 'Terjadi kesalahan!',
                 footer: error
               })
             })
@@ -462,6 +500,29 @@ export default {
             <i class="mdi mdi-trash-can font-size-18"></i>
           </a>
         </template>
+        <template v-slot:cell(manage)="data">
+          <div class="row">
+            <div class="col-12 m-2">
+              <b-button
+                  type="submit" 
+                  variant="danger"
+                  size="sm"
+                  @click=onClickReset(data)
+                  style="min-width: 75px;" 
+                  >Reset Password
+              </b-button>
+            </div>
+            <!-- <div class="col-12 m-2">
+              <b-button
+                  type="submit" 
+                  variant="danger"
+                  @click=onClickReset(data)
+                  style="min-width: 75px;" 
+                  >Reset Password
+              </b-button>
+            </div> -->
+          </div>
+        </template>
       </b-table>
     </div>
     <div class="row">
@@ -502,8 +563,6 @@ export default {
                                 <div class="form-group">
                                     <label for="nip">NIP</label>
                                     <input 
-                                    style="background-color: #F0F4F6;"
-                                    :disabled="true"
                                     v-model="dataEdit.nip"
                                     id="nip" 
                                     name="nip" 

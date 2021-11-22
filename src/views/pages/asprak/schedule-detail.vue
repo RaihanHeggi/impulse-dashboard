@@ -17,6 +17,8 @@ import { notificationMethods } from "@/state/helpers";
 /**
  * Advanced-form component
  */
+const greaterThanZero = (value) => value > 0
+
 export default {
   page: {
     title: "Edit Jadwal",
@@ -48,7 +50,7 @@ export default {
         questions: {
           $each: {
               text: { required },
-              weight: { required },
+              weight: { required, maxValue: greaterThanZero },
           }
         }
     },
@@ -150,10 +152,10 @@ export default {
 
       //input test
       test_id: "",
-      tests: ["Pretest", "Journal", "Posttest"],
+      tests: ["Tes Awal", "Jurnal", "Tes Akhir"],
       selected_test: "",
 
-      types: ["Multiple Choice", "Essay", "Upload File"],
+      types: ["Pilihan Ganda", "Esai", "Upload File"],
       selected_type: "",
 
       dataTest: {
@@ -188,7 +190,7 @@ export default {
             }
           });
           this.on('error', function(file, response){
-            console.log(response)
+            // console.log(response)
             Swal.fire({
                 icon: 'error',
                 title: 'Gagal mengunggah file!',
@@ -203,7 +205,16 @@ export default {
             })
           })
         }
-      }
+      },
+
+      room: {
+        name: "",
+        desc: "",
+        msteam_link: "",
+        msteam_code: "",
+      },
+
+      isRuanganShowed: false,
 
     };
   },
@@ -236,7 +247,7 @@ export default {
               Swal.fire({
                   icon: 'error',
                   title: 'Oops...',
-                  text: 'Something went wrong!',
+                  text: 'Terjadi kesalahan!',
                   footer: error
               })
           })
@@ -251,8 +262,8 @@ export default {
         Swal.fire({
             icon: 'error',
             title: 'Oops...',
-            text: 'This ID is invalid!',
-            footer: 'You will be redirected to Schedule Menu',
+            text: 'ID tidak valid!',
+            footer: 'Anda dialihkan ke menu Jadwal',
             timer: 4000
         })
         this.$router.replace({
@@ -274,7 +285,7 @@ export default {
               Swal.fire({
                   icon: 'error',
                   title: 'Oops...',
-                  text: 'Something went wrong!',
+                  text: 'Terjadi kesalahan!',
                   footer: error
               })
           })
@@ -293,7 +304,7 @@ export default {
               Swal.fire({
                   icon: 'error',
                   title: 'Oops...',
-                  text: 'Something went wrong!',
+                  text: 'Terjadi kesalahan!',
                   footer: error
               })
           })
@@ -353,7 +364,7 @@ export default {
               Swal.fire({
                   icon: 'error',
                   title: 'Oops...',
-                  text: 'Something went wrong!',
+                  text: 'Terjadi kesalahan!',
                   footer: error
               })
           })
@@ -391,6 +402,15 @@ export default {
 
     async loadDropdown(){
       await this.getRoomsData();
+
+      if(this.schedule_data.room.name){
+        this.setRoom(this.schedule_data.room.name);
+      }
+    },
+
+    setRoom(name){
+      let data_room = this.dataRooms.find(data => data.name === name);
+      this.selectRoom(data_room);
     },
 
     async getRoomsData(){
@@ -405,7 +425,7 @@ export default {
             Swal.fire({
                 icon: 'error',
                 title: 'Oops...',
-                text: 'Something went wrong!',
+                text: 'Terjadi kesalahan!',
                 footer: error
             })
           })
@@ -451,6 +471,11 @@ export default {
       if (this.$v.time_end.$invalid) {
         return;
       }
+
+      this.$v.schedule_data.$touch();
+      if (this.$v.schedule_data.$invalid) {
+        return;
+      }
       this.tryingToInput = true;
 
       let combined_start = this.time_date + " " + this.time_start;
@@ -494,7 +519,7 @@ export default {
             Swal.fire({
                 icon: 'error',
                 title: 'Oops...',
-                text: 'Something went wrong!',
+                text: 'Terjadi kesalahan!',
                 footer: error
             })
           })
@@ -510,17 +535,17 @@ export default {
       this.isLoadedData = false;
       
       //load data
-      if(value == "Journal"){
+      if(value == "Jurnal"){
         this.selected_type = "Upload File";
         this.dataTest.type = "file";
         this.test_id = this.schedule_data.module.journal_id;
         this.dataTest.test_type = "journal";
       }
-      else if(value == "Pretest"){
+      else if(value == "Tes Awal"){
         this.test_id = this.schedule_data.module.pretest_id;
         this.dataTest.test_type = "pretest";
       }
-      else if(value == "Posttest"){
+      else if(value == "Tes Akhir"){
         this.test_id = this.schedule_data.module.posttest_id;
         this.dataTest.test_type = "posttest";
       }
@@ -548,10 +573,10 @@ export default {
       this.inputTestSuccess = false;
       this.isLoadedData = false;
 
-      if(value == "Essay"){
+      if(value == "Esai"){
         this.dataTest.type = "essay"
       }
-      else if(value == "Multiple Choice"){
+      else if(value == "Pilihan Ganda"){
         this.dataTest.type = "multiple_choice"
       }
       else if(value == "Upload File"){
@@ -579,10 +604,10 @@ export default {
                   this.dataTest.questions = [];
 
                   if(data.test.type == "multiple_choice"){
-                    this.selected_type = "Multiple Choice"
+                    this.selected_type = "Pilihan Ganda"
                   }
                   else if(data.test.type == "essay"){
-                    this.selected_type = "Essay"
+                    this.selected_type = "Esai"
                   }
                   else if(data.test.type == "file"){
                     this.selected_type = "Upload File"
@@ -612,11 +637,11 @@ export default {
                 }
             })
             .catch(error => {
-                console.log(error)
+                // console.log(error)
                 Swal.fire({
                     icon: 'error',
                     title: 'Oops...',
-                    text: 'Something went wrong!',
+                    text: 'Terjadi kesalahan!',
                     footer: error
                 })
             })
@@ -711,7 +736,7 @@ export default {
                 Swal.fire({
                     icon: 'error',
                     title: 'Oops...',
-                    text: 'Something went wrong!',
+                    text: 'Terjadi kesalahan!',
                     footer: error
                 })
             })
@@ -728,7 +753,7 @@ export default {
             Swal.fire({
               icon: 'error',
               title: 'Oops...',
-              text: 'Something went wrong!',
+              text: 'Terjadi kesalahan!',
               footer: error
             })
           })
@@ -824,7 +849,7 @@ export default {
           text: 'File telah terunggah.',
       })
       this.loadData().then(result=>{
-        this.selectTest("Journal").then(rslt=>{
+        this.selectTest("Jurnal").then(rslt=>{
           this.inputTestSuccess = true;
           this.isUnsavedData = false;
           this.isLoadedData = false;
@@ -848,14 +873,23 @@ export default {
                 Swal.fire("Berhasil diunduh!", "File telah terunduh.", "success");
             })
             .catch(error => {
+                this.loading();
                 Swal.fire({
                     icon: 'error',
                     title: 'Oops...',
-                    text: 'Something went wrong!',
+                    text: 'Terjadi kesalahan!',
                     footer: error
                 })
             })
         );
+    },
+
+    onClickRuangan(){
+      this.isRuanganShowed = !this.isRuanganShowed;
+    },
+
+    selectRoom(value){
+      this.room = value;
     },
 
     loading() {
@@ -947,7 +981,7 @@ export default {
           <b-tabs nav-class="nav-tabs-custom">
             <b-tab title-link-class="p-3">
               <template v-slot:title>
-                <a class="font-weight-bold active">Edit Schedule</a>
+                <a class="font-weight-bold active">Edit Jadwal</a>
               </template>
               <template>
                 <form class="form-horizontal mt-4" @submit.prevent="updateSchedule">
@@ -983,7 +1017,7 @@ export default {
                   </div>
 
                   <div class="row mb-2 mt-2">
-                    <div class="form-group col-sm-6">
+                    <div class="form-group col-sm-12">
                         <label>Nama untuk Kalender</label>
                         <input 
                           v-model="schedule_data.title"
@@ -996,24 +1030,6 @@ export default {
                         v-if="submitted && !$v.schedule_data.title.required"
                         class="invalid-feedback"
                         >Name harus diisi!</div>
-                    </div>
-                    
-                    <div class="form-group col-sm-6">
-                        <label>Ruangan</label>
-                        <multiselect 
-                          v-model="schedule_data.room" 
-                          :options="dataRooms"
-                          label="name"
-                          track-by="name"
-                          :allow-empty="false"
-                          :disabled="isLoading"
-                          :show-labels="false"
-                          :class="{ 'is-invalid': submitted && $v.schedule_data.room.id.$error }"
-                        ></multiselect>
-                        <div
-                        v-if="submitted && !$v.schedule_data.room.id.required"
-                        class="invalid-feedback"
-                        >Ruangan harus diisi!</div>
                     </div>
                   </div>
 
@@ -1073,6 +1089,69 @@ export default {
                     </div>
                   </div>
 
+                  <div class="row mb-2 mt-2">
+                    <div class="form-group col-sm-12">
+                        <div class="row" style="margin:0!important;">
+                          <label class="mr-4">Ruangan</label>
+                          <a href="javascript:void(0)" @click="onClickRuangan" class="font-weight-bold active" v-if="!isRuanganShowed">show</a>
+                          <a href="javascript:void(0)" @click="onClickRuangan" class="font-weight-bold active" v-if="isRuanganShowed">hide</a>
+                        </div>
+                        <multiselect 
+                          v-model="schedule_data.room" 
+                          :options="dataRooms"
+                          label="name"
+                          track-by="name"
+                          @select="selectRoom"
+                          :allow-empty="false"
+                          :disabled="isLoading"
+                          :show-labels="false"
+                          :class="{ 'is-invalid': submitted && $v.schedule_data.room.id.$error }"
+                        ></multiselect>
+                        <div
+                        v-if="submitted && !$v.schedule_data.room.id.required"
+                        class="invalid-feedback"
+                        >Ruangan harus diisi!</div>
+                    </div>
+                  </div>
+
+                  <div class="row mb-2 mt-2" v-if="isRuanganShowed">
+                    <div class="form-group col-sm-12">
+                        <label>Deskripsi Ruangan</label>
+                        <textarea 
+                          v-model="room.desc"
+                          rows=2
+                          type="text"
+                          class="form-control"
+                          :disabled="true"
+                          style="background-color: #F0F4F6;"
+                        ></textarea>
+                    </div>
+                  </div>
+
+                  <div class="row mb-2 mt-2" v-if="isRuanganShowed">
+                    <div class="form-group col-sm-6">
+                        <label>MS Teams Link</label>
+                        <input 
+                          v-model="room.msteam_link"
+                          type="text"
+                          class="form-control"
+                          :disabled="true"
+                          style="background-color: #F0F4F6;"
+                        >
+                    </div>
+
+                    <div class="form-group col-sm-6">
+                        <label>MS Teams Code</label>
+                        <input 
+                          v-model="room.msteam_code"
+                          type="text"
+                          class="form-control"
+                          :disabled="true"
+                          style="background-color: #F0F4F6;"
+                        >
+                    </div>
+                  </div>
+
                   <div class="text-center mt-4">
                       <button
                       type="submit"
@@ -1085,14 +1164,14 @@ export default {
             </b-tab>
             <b-tab title-link-class="p-3">
                 <template v-slot:title>
-                    <a class="font-weight-bold active">Input Test</a>
+                    <a class="font-weight-bold active">Input Tes</a>
                 </template>
                 <template>
                     <div class="form-horizontal mt-4">
                       <div>
                         <div class="row">
                           <div class="form-group text-center col-sm-6">
-                              <label>Test</label>
+                              <label>Jenis Tes</label>
                               <multiselect 
                                 class="text-center"
                                 v-model="selected_test" 
@@ -1106,10 +1185,10 @@ export default {
                               <div
                                 v-if="submitted_test && !$v.dataTest.test_type.required"
                                 class="invalid-feedback text-center mt-2"
-                                >Test harus diisi!</div>
+                                >Tes harus diisi!</div>
                           </div>
                           <div class="form-group text-center col-sm-6">
-                              <label>Type</label>
+                              <label>Tipe Tes</label>
                               <multiselect 
                                 class="text-center"
                                 v-model="selected_type" 
@@ -1132,7 +1211,7 @@ export default {
                             class="mt-3"
                             variant="success"
                             dismissible
-                            >Data updated successfully!</b-alert>
+                            >Data berhasil diperbarui!</b-alert>
 
                             <b-alert
                             v-model="isInputTestError"
@@ -1161,14 +1240,14 @@ export default {
                             class="mt-3"
                             variant="danger"
                             dismissible
-                            >Unsaved data!</b-alert>
+                            >Data belum disimpan!</b-alert>
 
                             <b-alert
                             v-model="isLoadedData"
                             class="mt-3"
                             variant="warning"
                             dismissible
-                            >Data is loaded!</b-alert>
+                            >Data berhasil dimuat!</b-alert>
                         </div>
 
                         <hr style="margin-left: -20px; 
@@ -1178,7 +1257,7 @@ export default {
                                     border: 0 none; 
                                     color: #eee;"
                         >
-                        <div v-if="selected_type == 'Multiple Choice'" class="pt-4 pr-3 pb-4" style="background-color:#F1F5F7; margin:-20px;">
+                        <div v-if="selected_type == 'Pilihan Ganda'" class="pt-4 pr-3 pb-4" style="background-color:#F1F5F7; margin:-20px;">
                             <div class="col-sm-12" v-for="(question, index) in dataTest.questions" :key="index" :set="v = $v.dataTest.questions.$each[index]">
                                 <div class="row">
                                     <div class="text-center col-sm-1">
@@ -1212,7 +1291,7 @@ export default {
                                                       <div
                                                         v-if="submitted_test && !v.weight.$error.required"
                                                         class="invalid-feedback"
-                                                        >Bobot Nilai harus diisi!</div>
+                                                        >Bobot Nilai harus diisi dan lebih dari nol!</div>
                                                     </div>
                                                 </div>
                                                 <div class="col-12">
@@ -1281,7 +1360,7 @@ export default {
                                                         </div>
                                                         <hr>
                                                     </div>
-                                                    <div class="text-left">
+                                                    <div class="text-left" v-if="question.options.length < 10">
                                                         <b-button size="sm" v-on:click="addAnswer(question)" variant="outline-secondary">
                                                           <b-icon icon="plus-circle-fill"></b-icon> tambah jawaban
                                                         </b-button>
@@ -1299,7 +1378,7 @@ export default {
                                 </b-button>
                             </div>
                         </div>
-                        <div v-if="selected_type == 'Essay'" class="pt-4 pr-3 pb-4" style="background-color:#F1F5F7; margin:-20px;">
+                        <div v-if="selected_type == 'Esai'" class="pt-4 pr-3 pb-4" style="background-color:#F1F5F7; margin:-20px;">
                             <div class="col-sm-12" v-for="(question, index) in dataTest.questions" :key="index" :set="v = $v.dataTest.questions.$each[index]">
                                 <div class="row">
                                     <div class="text-center col-sm-1">
@@ -1388,15 +1467,15 @@ export default {
                                   <!-- <div title="Import Excel"> -->
                                   <div>
                                       <div class="tab-pane pb-2 pt-2" id="metadata">
-                                          <p style="color: red; font-size: 12px; margin: 0 !important;">IMPORTANT – PLEASE READ CAREFULLY</p>
+                                          <p style="color: red; font-size: 12px; margin: 0 !important;">PENTING – HARAP DIBACA DENGAN TELITI</p>
                                           <p class="mt-2" style="color: black; font-size: 14px; margin-bottom: 0 !important;">Deskripsi upload soal Jurnal:</p>
                                           <p class="card-title-desc" style="font-size: 14px; margin: 0 !important;">
                                               - Pastikan mengisi form <b>Bobot Nilai</b> dan <b>URL Upload Jawaban</b> terlebih dahulu,<br>
                                               - Form <b>URL Upload Jawaban</b> digunakan untuk praktikan mengunggah jawaban tes Jurnal,<br>
-                                              - <b>File Soal</b> yang dapat diunggah bertipe <b>.PDF</b>, <b>.DOC</b>, <b>.DOCX</b>, <b>.RAR</b>, atau <b>.ZIP</b>,<br>
-                                              - Batas ukuran <b>File Soal</b> adalah <b>2 MB</b>,<br>
+                                              - <b>File Soal Jurnal</b> yang dapat diunggah bertipe <b>.PDF</b>, <b>.DOC</b>, <b>.DOCX</b>, <b>.RAR</b>, atau <b>.ZIP</b>,<br>
+                                              - Batas ukuran <b>File Soal Jurnal</b> adalah <b>2 MB</b>,<br>
                                               - Data tersimpan setelah <b>Upload File Soal Jurnal</b> berhasil tanpa error,<br>
-                                              - Unggah file kembali untuk memperbarui <b>File Soal</b>, <b>Bobot Nilai</b>, dan <b>URL Upload Jawaban</b>.
+                                              - Unggah file kembali untuk memperbarui <b>Bobot Nilai</b>, <b>URL Upload Jawaban</b>, dan <b>File Soal Jurnal</b>.
                                               <!-- - Pastikan hanya ada <b>satu sheet</b>,<br>
                                               - Pastikan Header / Row ke 1 dan urutan data di dalam file sama seperti berikut ini:<br> -->
                                           </p>
@@ -1439,7 +1518,7 @@ export default {
                                                     </div>
                                                 </div>
                                                 <div class="col-4" v-if="dataTest.questions[0].text">
-                                                    <label>File Journal</label>
+                                                    <label>File Soal Jurnal</label>
                                                     <div class="form-group">
                                                       <input 
                                                         v-model="dataTest.questions[0].text"

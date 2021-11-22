@@ -16,7 +16,7 @@ export default {
       //dropzone
       seen: false,
       dropzoneOptions: {
-        url: process.env.VUE_APP_BACKEND_URL + "/laboran/student/import",
+        url: process.env.VUE_APP_BACKEND_URL + "/laboran/asprak/import",
         thumbnailWidth: 150,
         maxFilesize: 5,
         
@@ -72,15 +72,18 @@ export default {
                     <p style="color: red; font-size: 12px; margin: 0 !important;">PENTING – HARAP DIBACA DENGAN TELITI</p>
                     <p class="mt-2" style="color: black; font-size: 14px; margin-bottom: 0 !important;">Deskripsi upload file Excel :</p>
                     <p class="card-title-desc" style="font-size: 14px; margin: 0 !important;">
-                        - Pastikan kode dosen yang digunakan tersedia di <a href="/laboran/staff"><b>Data Staff</b></a>,<br>
+                        - Pastikan NIM yang digunakan tersedia di <a href="/laboran/student"><b>Data Mahasiswa</b></a>,<br>
+                        - Pastikan kode mata kuliah yang digunakan tersedia di <a href="/laboran/class-course"><b>Kelas Mata Kuliah</b></a>,<br>
                         - Pastikan file bertipe <b>.CSV</b> atau <b>.XSLX</b>,<br>
                         - Pastikan hanya ada <b>satu sheet</b>,<br>
                         - Pastikan Header / Row ke 1 dan urutan data di dalam file sama seperti berikut ini:<br>
                     </p>
-                    <img src="@/assets/images/student-excel-example.png" style="box-sizing: border-box; width: 100%;"/>
-                    <div class="mb-4 mt-2">
+                    <img class="mt-2 mb-2" src="@/assets/images/asprak-excel-example.png" style="box-sizing: border-box; 
+                                                                                            width: 25%; 
+                                                                                            margin: auto;"/>
+                    <div class="mb-4 mt-4">
                         <p class="card-title-desc" style="font-size: 14px; margin: 0 !important;">
-                            Contoh file Excel: <a href="/files/studentdummy.xlsx" download>studentdummy.xlsx</a><br>
+                            Contoh file Excel: <a href="/files/asprakdummy.xlsx" download>asprakdummy.xlsx</a><br>
                         </p>
                     </div>
                     <!-- file upload -->

@@ -40,7 +40,7 @@ export default {
         { key: "desc", sortable: true, label: "Deskripsi" },
         { key: "msteam_link", sortable: true, label: "Link MS Teams" },
         { key: "msteam_code", sortable: true, label: "Kode MS Teams" },
-        { key: "action", sortable: false }
+        { key: "action", sortable: false, thClass: 'text-center', tdClass: 'text-center', }
       ],
 
       //modal edit
@@ -103,7 +103,7 @@ export default {
             Swal.fire({
                 icon: 'error',
                 title: 'Oops...',
-                text: 'Something went wrong!',
+                text: 'Terjadi kesalahan!',
                 footer: error
             })
           })
@@ -164,7 +164,7 @@ export default {
             Swal.fire({
               icon: 'error',
               title: 'Oops...',
-              text: 'Something went wrong!',
+              text: 'Terjadi kesalahan!',
               footer: error
             })
           })
@@ -205,7 +205,7 @@ export default {
               Swal.fire({
                 icon: 'error',
                 title: 'Oops...',
-                text: 'Something went wrong!',
+                text: 'Terjadi kesalahan!',
                 footer: error
               })
             })
