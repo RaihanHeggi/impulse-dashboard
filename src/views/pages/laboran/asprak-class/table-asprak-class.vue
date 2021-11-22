@@ -40,6 +40,7 @@ export default {
       sortBy: "class_course.classes.name",
       sortDesc: false,
       fields: [
+        { key: "asprak_code", sortable: false, label: "Kode Asprak" },
         { key: "student.nim", sortable: false, label: "NIM" },
         { key: "student.name", sortable: false, label: "Nama" },
         { key: "class_course.classes.name", sortable: false, label: "Kelas MK" },
@@ -48,7 +49,7 @@ export default {
         { key: "class_course.staffs.code", sortable: false, label: "Kode Dosen" },
         { key: "class_course.academic_years.semester", sortable: false, label: "Semester" },
         { key: "class_course.academic_years.year", sortable: false, label: "Tahun Akademik" },
-        { key: "action", sortable: false }
+        { key: "action", sortable: false, thClass: 'text-center', tdClass: 'text-center', }
       ],
 
       class_name: "",
@@ -162,7 +163,7 @@ export default {
             Swal.fire({
                 icon: 'error',
                 title: 'Oops...',
-                text: 'Something went wrong!',
+                text: 'Terjadi kesalahan!',
                 footer: error
             })
           })
@@ -250,7 +251,7 @@ export default {
             Swal.fire({
               icon: 'error',
               title: 'Oops...',
-              text: 'Something went wrong!',
+              text: 'Terjadi kesalahan!',
               footer: error
             })
           })
@@ -273,7 +274,7 @@ export default {
                 Swal.fire({
                     icon: 'error',
                     title: 'Oops...',
-                    text: 'Something went wrong!',
+                    text: 'Terjadi kesalahan!',
                     footer: error
                 })
             })

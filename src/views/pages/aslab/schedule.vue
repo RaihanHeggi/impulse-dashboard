@@ -74,8 +74,8 @@ export default {
         { key: "date", sortable: true, label: "Tanggal" },
         { key: "start", sortable: true, label: "Jam Mulai" },
         { key: "end", sortable: true, label: "Jam Terakhir" },
-        { key: "room.name", sortable: true, label: "Ruangan" },
-        { key: "action", sortable: false }
+        { key: "room", sortable: false, label: "Ruangan", thClass: 'text-center', tdClass: 'text-center' },
+        { key: "action", sortable: false, }
       ],
 
       class_name: "",
@@ -130,6 +130,16 @@ export default {
         }
       },
       eventModal: false,
+      eventModalRuangan: false,
+
+      room: {
+        name: "",
+        desc: "",
+        msteam_link: "",
+        msteam_code: "",
+      },
+
+      isRuanganShowed: false,
 
       isCourseSelected: false,
     };
@@ -184,7 +194,7 @@ export default {
             Swal.fire({
                 icon: 'error',
                 title: 'Oops...',
-                text: 'Something went wrong!',
+                text: 'Terjadi kesalahan!',
                 footer: error
             })
           })
@@ -207,7 +217,7 @@ export default {
                 Swal.fire({
                     icon: 'error',
                     title: 'Oops...',
-                    text: 'Something went wrong!',
+                    text: 'Terjadi kesalahan!',
                     footer: error
                 })
             })
@@ -287,7 +297,7 @@ export default {
               Swal.fire({
                   icon: 'error',
                   title: 'Oops...',
-                  text: 'Something went wrong!',
+                  text: 'Terjadi kesalahan!',
                   footer: error
               })
           })
@@ -331,6 +341,15 @@ export default {
           name: 'aslab-schedule-input', 
           params: { id: this.schedule_data.id }
       });
+    },
+
+    onClickShow(data) {
+      this.room = data.item.room;
+      this.eventModalRuangan = true;
+    },
+
+    onClickRuangan(){
+      this.isRuanganShowed = !this.isRuanganShowed;
     },
 
     loading() {
@@ -463,6 +482,16 @@ export default {
                 @filtered="onFiltered"
                 :headVariant="'dark'"
             >
+                <template v-slot:cell(room)="data">
+                  <b-button
+                      type="submit" 
+                      variant="outline-secondary"
+                      @click=onClickShow(data)
+                      size="sm"
+                      style="min-width: 75px;" 
+                      >{{data.item.room.name}}
+                  </b-button>
+                </template>
                 <template v-slot:cell(action)="data">
                   <a
                       href="javascript:void(0);"
@@ -502,6 +531,61 @@ export default {
             </div>
         </div>
     </div>
+    <b-modal
+      size="lg"
+      v-model="eventModalRuangan"
+      title="Detail Ruangan"
+      hide-footer 
+      title-class="font-18"
+    >
+      <div class="tab-pane col-sm-12 col-md-12" id="metadata">
+        <div>
+            <div class="form-group">
+                <label>Ruangan</label>
+                <input
+                    v-model="room.name"
+                    type="text"
+                    class="form-control"
+                    disabled="true"
+                />
+            </div>
+        </div>
+        <div>
+            <div class="form-group">
+                <label>Deskripsi Ruangan</label>
+                <textarea
+                    v-model="room.desc"
+                    rows=2
+                    type="text"
+                    class="form-control"
+                    disabled="true"
+                />
+            </div>
+        </div>
+        <div>
+            <div class="form-group">
+                <label>MS Teams Link</label>
+                <input
+                    v-model="room.msteam_link"
+                    type="text"
+                    class="form-control"
+                    disabled="true"
+                />
+            </div>
+        </div>
+        <div>
+            <div class="form-group">
+                <label>MS Teams Code</label>
+                <input
+                    v-model="room.msteam_code"
+                    type="text"
+                    class="form-control"
+                    disabled="true"
+                />
+            </div>
+        </div>
+      </div>
+    </b-modal>
     <!-- Edit Modal -->
     <b-modal
       size="lg"
@@ -572,17 +656,6 @@ export default {
         </div>
         <div>
             <div class="form-group">
-                <label>Ruangan</label>
-                <input
-                    v-model="schedule_data.room.name"
-                    type="text"
-                    class="form-control"
-                    disabled="true"
-                />
-            </div>
-        </div>
-        <div>
-            <div class="form-group">
                 <label>Tanggal</label>
                 <input
                     v-model="schedule_data.date"
@@ -615,6 +688,66 @@ export default {
                   />
               </div>
           </div>
+        </div>
+        <div>
+            <div class="form-group">
+                <div class="row" style="margin:0!important;">
+                  <label class="mr-4">Ruangan</label>
+                  <a href="javascript:void(0)" @click="onClickRuangan" class="font-weight-bold active" v-if="!isRuanganShowed">show</a>
+                  <a href="javascript:void(0)" @click="onClickRuangan" class="font-weight-bold active" v-if="isRuanganShowed">hide</a>
+                </div>
+                <input
+                    v-model="schedule_data.room.name"
+                    type="text"
+                    class="form-control"
+                    disabled="true"
+                />
+            </div>
+        </div>
+        <div v-if="isRuanganShowed">
+            <div class="form-group">
+                <label>Deskripsi Ruangan</label>
+                <textarea
+                    v-model="schedule_data.room.desc"
+                    rows=2
+                    type="text"
+                    class="form-control"
+                    disabled="true"
+                />
+            </div>
+        </div>
+        <div v-if="isRuanganShowed">
+            <div class="form-group">
+                <label>MS Teams Link</label>
+                <input
+                    v-model="schedule_data.room.msteam_link"
+                    type="text"
+                    class="form-control"
+                    disabled="true"
+                />
+            </div>
+        </div>
+        <div v-if="isRuanganShowed">
+            <div class="form-group">
+                <label>MS Teams Code</label>
+                <input
+                    v-model="schedule_data.room.msteam_code"
+                    type="text"
+                    class="form-control"
+                    disabled="true"
+                />
+            </div>
+        </div>
+        <div v-if="isRuanganShowed">
+            <div class="form-group">
+                <label>Tanggal</label>
+                <input
+                    v-model="schedule_data.date"
+                    type="text"
+                    class="form-control"
+                    disabled="true"
+                />
+            </div>
         </div>
         <!-- <div class="text-right mt-4">
             <button

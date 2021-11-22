@@ -48,7 +48,7 @@ export default {
         { key: "staff_code", sortable: true, label: "Kode Dosen" },
         { key: "semester", sortable: true, label: "Semester" },
         { key: "academic_year", sortable: true, label: "Tahun Akademik" },
-        { key: "action", sortable: false }
+        { key: "action", sortable: false, thClass: 'text-center', tdClass: 'text-center', }
       ],
 
       class_name: "",
@@ -194,7 +194,7 @@ export default {
             Swal.fire({
                 icon: 'error',
                 title: 'Oops...',
-                text: 'Something went wrong!',
+                text: 'Terjadi kesalahan!',
                 footer: error
             })
           })
@@ -282,7 +282,7 @@ export default {
             Swal.fire({
               icon: 'error',
               title: 'Oops...',
-              text: 'Something went wrong!',
+              text: 'Terjadi kesalahan!',
               footer: error
             })
           })
@@ -305,7 +305,7 @@ export default {
                 Swal.fire({
                     icon: 'error',
                     title: 'Oops...',
-                    text: 'Something went wrong!',
+                    text: 'Terjadi kesalahan!',
                     footer: error
                 })
             })
@@ -394,7 +394,7 @@ export default {
               Swal.fire({
                 icon: 'error',
                 title: 'Oops...',
-                text: 'Something went wrong!',
+                text: 'Terjadi kesalahan!',
                 footer: error
               })
             })
@@ -414,7 +414,7 @@ export default {
               Swal.fire({
                   icon: 'error',
                   title: 'Oops...',
-                  text: 'Something went wrong!',
+                  text: 'Terjadi kesalahan!',
                   footer: error
               })
             })
@@ -467,7 +467,7 @@ export default {
               Swal.fire({
                 icon: 'error',
                 title: 'Oops...',
-                text: 'Something went wrong!',
+                text: 'Terjadi kesalahan!',
                 footer: error
               })
             })

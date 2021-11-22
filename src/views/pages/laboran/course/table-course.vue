@@ -36,7 +36,7 @@ export default {
       fields: [
         { key: "code", sortable: true, label: "Kode Mata Kuliah" },
         { key: "name", sortable: true, label: "Nama Mata Kuliah" },
-        { key: "action", sortable: false }
+        { key: "action", sortable: false, thClass: 'text-center', tdClass: 'text-center', }
       ],
 
       //modal edit
@@ -130,7 +130,7 @@ export default {
             Swal.fire({
                 icon: 'error',
                 title: 'Oops...',
-                text: 'Something went wrong!',
+                text: 'Terjadi kesalahan!',
                 footer: error
             })
           })
@@ -218,7 +218,7 @@ export default {
             Swal.fire({
               icon: 'error',
               title: 'Oops...',
-              text: 'Something went wrong!',
+              text: 'Terjadi kesalahan!',
               footer: error
             })
           })
@@ -257,7 +257,7 @@ export default {
               Swal.fire({
                 icon: 'error',
                 title: 'Oops...',
-                text: 'Something went wrong!',
+                text: 'Terjadi kesalahan!',
                 footer: error
               })
             })

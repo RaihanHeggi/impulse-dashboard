@@ -30,11 +30,12 @@ export default {
       sortDesc: false,
       fields: [
         { key: "class.name", sortable: true, label: "Nama Kelas" },
+        { key: "course.code", sortable: true, label: "Kode MK" },
         { key: "course.name", sortable: true, label: "Nama MK" },
         { key: "staff.name", sortable: true, label: "Nama Dosen" },
         { key: "academic_year.semester", sortable: true, label: "Semester" },
         { key: "academic_year.name", sortable: true, label: "Tahun Akademik" },
-        { key: "action", sortable: false }
+        { key: "action", sortable: false, thClass: 'text-center', tdClass: 'text-center', }
       ],
 
       class_name: "",
@@ -127,7 +128,7 @@ export default {
             Swal.fire({
                 icon: 'error',
                 title: 'Oops...',
-                text: 'Something went wrong!',
+                text: 'Terjadi kesalahan!',
                 footer: error
             })
           })
@@ -150,7 +151,7 @@ export default {
                 Swal.fire({
                     icon: 'error',
                     title: 'Oops...',
-                    text: 'Something went wrong!',
+                    text: 'Terjadi kesalahan!',
                     footer: error
                 })
             })
@@ -255,7 +256,7 @@ export default {
             Swal.fire({
               icon: 'error',
               title: 'Oops...',
-              text: 'Something went wrong!',
+              text: 'Terjadi kesalahan!',
               footer: error
             })
           })

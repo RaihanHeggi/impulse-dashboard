@@ -175,13 +175,19 @@ export default {
             this.isIdValid(response.data);
             if(response.data){
               this.bap_data = response.data;
+              if(!this.bap_data.asprak){
+                  this.bap_data.asprak = [];
+              }
+              if(!this.bap_data.student){
+                  this.bap_data.student = [];
+              }
             }
           })
           .catch(error => {
               Swal.fire({
                   icon: 'error',
                   title: 'Oops...',
-                  text: 'Something went wrong!',
+                  text: 'Terjadi kesalahan!',
                   footer: error
               })
           })
@@ -206,8 +212,8 @@ export default {
                 Swal.fire({
                     icon: 'error',
                     title: 'Oops...',
-                    text: 'This ID is invalid!',
-                    footer: 'You will be redirected to Schedule Menu',
+                    text: 'ID tidak valid!',
+                    footer: 'Anda dialihkan ke menu Jadwal',
                     timer: 4000
                 })
                 this.$router.replace({
@@ -219,8 +225,8 @@ export default {
         Swal.fire({
             icon: 'error',
             title: 'Oops...',
-            text: 'This ID is invalid!',
-            footer: 'You will be redirected to Schedule Menu',
+            text: 'ID tidak valid!',
+            footer: 'Anda dialihkan ke menu Jadwal',
             timer: 4000
         })
         this.$router.replace({
@@ -297,7 +303,7 @@ export default {
             });
           })
           .catch(error => {
-            console.log(error)
+            // console.log(error)
             this.submitted = false;
             this.tryingToInput = false;
             this.isInputError = true;
@@ -305,7 +311,7 @@ export default {
             Swal.fire({
                 icon: 'error',
                 title: 'Oops...',
-                text: 'Something went wrong!',
+                text: 'Terjadi kesalahan!',
                 footer: error
             })
           })
@@ -375,7 +381,19 @@ export default {
       <b-spinner style="width: 3rem; height: 3rem;" class="m-2" variant="warning" role="status"></b-spinner>
     </div>
     <div>
-        <form class="form-horizontal" @submit.prevent="onClickSubmit">
+        <div class="card">
+          <div class="card-body">
+            <div class="tab-pane" id="metadata">
+              <p style="color: red; font-size: 12px; margin: 0 !important;">PENTING – HARAP DIBACA DENGAN TELITI</p>
+              <p class="mt-2" style="color: black; font-size: 14px; margin-bottom: 0 !important;">Deskripsi input BAP :</p>
+              <p class="card-title-desc" style="font-size: 14px; margin: 0 !important;">
+                  - BAP yang berhasil disimpan tidak akan bisa diubah,<br>
+                  - Pastikan setiap data yang diisi telah sesuai dan benar!
+              </p>
+            </div>
+          </div>
+        </div>
+        <form class="form-horizontal mt-2" @submit.prevent="onClickSubmit">
             <div class="card">
                 <div class="card-body">
                     <b-form-group

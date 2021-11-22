@@ -14,7 +14,7 @@ import { notificationMethods } from "@/state/helpers";
  */
 export default {
   page: {
-    title: "List Test",
+    title: "List Tes",
     meta: [{ name: "description" }],
   },
   components: {
@@ -48,7 +48,7 @@ export default {
   },
   data() {
     return {
-      title: "List Test",
+      title: "List Tes",
       items: [
         {
           text: "Asisten Praktikum",
@@ -59,7 +59,7 @@ export default {
           href: "/asprak/grading/"
         },
         {
-          text: "List Test",
+          text: "List Tes",
           active: true,
         }
       ],
@@ -120,12 +120,13 @@ export default {
       fields: [
         { key: "nim", sortable: true, label: "NIM" },
         { key: "name", sortable: true, label: "Nama" },
-        { key: "grade.pretest", sortable: true, label: "Nilai Pretest", thClass: 'text-center', tdClass: 'text-center', },
+        { key: "grade.pretest", sortable: true, label: "Nilai Tes Awal", thClass: 'text-center', tdClass: 'text-center', },
         { key: "grade.journal", sortable: true, label: "Nilai Jurnal", thClass: 'text-center', tdClass: 'text-center', },
-        { key: "grade.posttest", sortable: true, label: "Nilai Posttest", thClass: 'text-center', tdClass: 'text-center', },
+        { key: "grade.posttest", sortable: true, label: "Nilai Tes Akhir", thClass: 'text-center', tdClass: 'text-center', },
         { key: "pretest", sortable: false, thClass: 'text-center', tdClass: 'text-center', },
         { key: "journal", sortable: false, thClass: 'text-center', tdClass: 'text-center', },
         { key: "posttest", sortable: false, thClass: 'text-center', tdClass: 'text-center', },
+        { key: "grade.total", sortable: true, label: "Nilai Total", thClass: 'text-center', tdClass: 'text-center', },
       ],
     };
   },
@@ -181,7 +182,7 @@ export default {
               Swal.fire({
                   icon: 'error',
                   title: 'Oops...',
-                  text: 'Something went wrong!',
+                  text: 'Terjadi kesalahan!',
                   footer: error
               })
           })
@@ -200,7 +201,7 @@ export default {
               Swal.fire({
                   icon: 'error',
                   title: 'Oops...',
-                  text: 'Something went wrong!',
+                  text: 'Terjadi kesalahan!',
                   footer: error
               })
           })
@@ -225,8 +226,8 @@ export default {
         Swal.fire({
             icon: 'error',
             title: 'Oops...',
-            text: 'This ID is invalid!',
-            footer: 'You will be redirected to Schedule Menu',
+            text: 'ID tidak valid!',
+            footer: 'Anda dialihkan ke menu Jadwal',
             timer: 4000
         })
         this.$router.replace({
@@ -248,7 +249,7 @@ export default {
               Swal.fire({
                   icon: 'error',
                   title: 'Oops...',
-                  text: 'Something went wrong!',
+                  text: 'Terjadi kesalahan!',
                   footer: error
               })
           })
@@ -267,7 +268,7 @@ export default {
               Swal.fire({
                   icon: 'error',
                   title: 'Oops...',
-                  text: 'Something went wrong!',
+                  text: 'Terjadi kesalahan!',
                   footer: error
               })
           })
@@ -309,7 +310,7 @@ export default {
               Swal.fire({
                   icon: 'error',
                   title: 'Oops...',
-                  text: 'Something went wrong!',
+                  text: 'Terjadi kesalahan!',
                   footer: error
               })
           })
@@ -425,7 +426,7 @@ export default {
       </div>
       <div class="card">
         <div class="card-body">
-            <div class="row mt-4">
+            <div class="row">
             <div class="col-sm-12 col-md-6">
                 <div id="tickets-table_length" class="dataTables_length">
                 <label class="d-inline-flex align-items-center">

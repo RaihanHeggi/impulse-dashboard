@@ -11,7 +11,7 @@ import store from '@/store';
 
 export default {
     page: {
-        title: "Test",
+        title: "Tes",
         meta: [{ name: "description" }],
     },
     components: {
@@ -38,7 +38,7 @@ export default {
     },
     data() {
         return {
-            title: "Test",
+            title: "Tes",
             items: [
                 {
                     text: "Praktikan",
@@ -53,7 +53,7 @@ export default {
                     href: "/praktikan/schedule/calendar"
                 },
                 {
-                    text: "Test",
+                    text: "Tes",
                     active: true,
                 }
             ],
@@ -136,7 +136,7 @@ export default {
             //         icon: 'error',
             //         title: 'Oops...',
             //         text: 'You need input Auth first!',
-            //         footer: 'You are redirected to Schedule Menu',
+            //         footer: 'Anda dialihkan ke menu Jadwal',
             //     })
             //     this.$router.replace({
             //         name: 'praktikan-schedule-detail', 
@@ -151,8 +151,8 @@ export default {
                 Swal.fire({
                     icon: 'error',
                     title: 'Oops...',
-                    text: 'This test currently not actived!',
-                    footer: 'You are redirected to Schedule Menu',
+                    text: 'Tes saat ini belum dimulai!',
+                    footer: 'Anda dialihkan ke menu Jadwal',
                 })
                 this.$router.replace({
                     name: 'praktikan-schedule-detail', 
@@ -219,7 +219,7 @@ export default {
                     Swal.fire({
                         icon: 'error',
                         title: 'Oops...',
-                        text: 'Something went wrong!',
+                        text: 'Terjadi kesalahan!',
                         footer: error
                     })
                 })
@@ -240,7 +240,7 @@ export default {
                     Swal.fire({
                         icon: 'error',
                         title: 'Oops...',
-                        text: 'Something went wrong!',
+                        text: 'Terjadi kesalahan!',
                         footer: error
                     })
                 })
@@ -276,7 +276,7 @@ export default {
                         Swal.fire({
                             icon: 'error',
                             title: 'Oops...',
-                            text: 'Something went wrong!',
+                            text: 'Terjadi kesalahan!',
                             footer: error
                         })
                     })
@@ -305,7 +305,7 @@ export default {
                         Swal.fire({
                             icon: 'error',
                             title: 'Oops...',
-                            text: 'Something went wrong!',
+                            text: 'Terjadi kesalahan!',
                             footer: error
                         })
                     })
@@ -321,8 +321,8 @@ export default {
                 Swal.fire({
                     icon: 'error',
                     title: 'Oops...',
-                    text: 'This ID is invalid!',
-                    footer: 'You will be redirected to Schedule Menu',
+                    text: 'ID tidak valid!',
+                    footer: 'Anda dialihkan ke menu Jadwal',
                     timer: 4000
                 })
                 this.$router.back();
@@ -373,7 +373,7 @@ export default {
                     //         Swal.fire({
                     //             icon: 'error',
                     //             title: 'Oops...',
-                    //             text: 'Something went wrong!',
+                    //             text: 'Terjadi kesalahan!',
                     //             footer: error
                     //         })
                     //     })
@@ -393,7 +393,7 @@ export default {
                             Swal.fire({
                                 icon: 'error',
                                 title: 'Oops...',
-                                text: 'Something went wrong!',
+                                text: 'Terjadi kesalahan!',
                                 footer: error
                             })
                         })
@@ -415,7 +415,7 @@ export default {
                     //         Swal.fire({
                     //             icon: 'error',
                     //             title: 'Oops...',
-                    //             text: 'Something went wrong!',
+                    //             text: 'Terjadi kesalahan!',
                     //             footer: error
                     //         })
                     //     })
@@ -435,7 +435,7 @@ export default {
                             Swal.fire({
                                 icon: 'error',
                                 title: 'Oops...',
-                                text: 'Something went wrong!',
+                                text: 'Terjadi kesalahan!',
                                 footer: error
                             })
                         })
@@ -459,7 +459,7 @@ export default {
                         Swal.fire({
                             icon: 'error',
                             title: 'Oops...',
-                            text: 'Something went wrong!',
+                            text: 'Terjadi kesalahan!',
                             footer: error
                         })
                     })
@@ -485,7 +485,7 @@ export default {
                     Swal.fire({
                         icon: 'error',
                         title: 'Oops...',
-                        text: 'Something went wrong!',
+                        text: 'Terjadi kesalahan!',
                         footer: error
                     })
                 })
@@ -580,7 +580,7 @@ export default {
             <div class="card">
                 <div class="card-body">
                     <div class="text-center">
-                        <label>File Journal</label>
+                        <label>File Jurnal</label>
                     </div>
                     <div class="text-center">
                         <b-button variant="primary" @click="onClickDownload" style="min-width: 350px;">Download</b-button>
@@ -593,7 +593,7 @@ export default {
             <div class="card">
                 <div class="card-body">
                     <div class="text-center">
-                        <label>URL Upload Jawaban Journal</label>
+                        <label>URL Upload Jawaban Jurnal</label>
                     </div>
                     <div class="text-center">
                         <div class="form-group">
