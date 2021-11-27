@@ -4,6 +4,7 @@ import * as api from '@/api';
 import Swal from "sweetalert2";
 import { required } from "vuelidate/lib/validators";
 import Multiselect from "vue-multiselect";
+import tableRoomVue from '../room/table-room.vue';
 
 /**
  * Orders Component
@@ -22,9 +23,6 @@ export default {
       class_name: { required },
       course_name: { required },
     },
-  },
-  created() {
-    document.body.classList.add("auth-body-bg");
   },
   data() {
     return {
@@ -48,7 +46,7 @@ export default {
         { key: "staff_code", sortable: true, label: "Kode Dosen" },
         { key: "semester", sortable: true, label: "Semester" },
         { key: "academic_year", sortable: true, label: "Tahun Akademik" },
-        { key: "action", sortable: false, thClass: 'text-center', tdClass: 'text-center', }
+        { key: "action", label: "Aksi", sortable: false, thClass: 'text-center', tdClass: 'text-center', }
       ],
 
       class_name: "",
@@ -113,14 +111,14 @@ export default {
         return this.courseData;
     }
   },
+  created() {
+    document.body.classList.add("auth-body-bg");
+  },
   mounted: async function() {
-    // Set the initial number of items
-    this.loading();
-    await this.fetchData().then(result=>{
-        this.loading();
-    });
-
+    this.loading(true);
+    await this.fetchData();
     this.loadDataDropdown();
+    this.loading(false);
   },
   methods: {
     ...notificationMethods,
@@ -191,34 +189,40 @@ export default {
           .catch(error => {
             this.isFetchingData = false;
             
-            Swal.fire({
-                icon: 'error',
-                title: 'Oops...',
-                text: 'Terjadi kesalahan!',
-                footer: error
-            })
+            if(error.response.status == 401){
+              this.$router.replace({
+                  name: 'login', params: { tokenExpired: true }
+              });
+            }
+            else{
+              Swal.fire({
+                  icon: 'error',
+                  title: 'Oops...',
+                  text: 'Terjadi kesalahan!',
+                  footer: error.response.data.message
+              })
+            }
           })
       )
     },
 
     async handlePageChange(value) {
+      this.loading(true);
       this.currentPage = value;
-      this.loading();
-      await this.fetchData().then(result=>{
-          this.loading();
-      });
+      await this.fetchData();
+      this.loading(false);
     },
 
     async handlePageSizeChange(value) {
+      this.loading(true);
       this.perPage = value;
       this.currentPage = 1;
-      this.loading();
-      await this.fetchData().then(result=>{
-          this.loading();
-      });
+      await this.fetchData();
+      this.loading(false);
     },
 
     async handleSortingChange(value){
+      this.loading(true);
       if(value.sortBy !== this.sortBy) {
         this.sortDesc = false
       } 
@@ -231,25 +235,21 @@ export default {
         }
       }
       this.sortBy = value.sortBy;
-      this.loading();
-      await this.fetchData().then(result=>{
-          this.loading();
-      });
+      await this.fetchData();
+      this.loading(false);
     },
 
     async handleSearch(value){
+      this.loading(true);
       this.filter = value;
-      this.loading();
-      await this.fetchData().then(result=>{
-          this.loading();
-      });
+      await this.fetchData();
+      this.loading(false);
     },
 
     async refreshData(){
-      this.loading();
-      await this.fetchData().then(result=>{
-          this.loading();
-      });
+      this.loading(true);
+      await this.fetchData();
+      this.loading(false);
     },
 
     onClickDelete(data){
@@ -273,18 +273,24 @@ export default {
         api.deleteStudentClass(id)
           .then(response => {
             Swal.fire("Berhasil dihapus!", nim + " telah terhapus.", "success");
-            this.loading();
-            this.fetchData().then(result=>{
-                this.loading();
-            });
+            this.loading(true);
+            this.fetchData();
+            this.loading(false);
           })
           .catch(error => {
-            Swal.fire({
-              icon: 'error',
-              title: 'Oops...',
-              text: 'Terjadi kesalahan!',
-              footer: error
-            })
+            if(error.response.status == 401){
+              this.$router.replace({
+                  name: 'login', params: { tokenExpired: true }
+              });
+            }
+            else{
+              Swal.fire({
+                  icon: 'error',
+                  title: 'Oops...',
+                  text: 'Terjadi kesalahan!',
+                  footer: error.response.data.message
+              })
+            }
           })
       )
     },
@@ -302,12 +308,19 @@ export default {
                 }
             })
             .catch(error => {
-                Swal.fire({
-                    icon: 'error',
-                    title: 'Oops...',
-                    text: 'Terjadi kesalahan!',
-                    footer: error
-                })
+                if(error.response.status == 401){
+                  this.$router.replace({
+                      name: 'login', params: { tokenExpired: true }
+                  });
+                }
+                else{
+                  Swal.fire({
+                      icon: 'error',
+                      title: 'Oops...',
+                      text: 'Terjadi kesalahan!',
+                      footer: error.response.data.message
+                  })
+                }
             })
         )
     },
@@ -320,39 +333,35 @@ export default {
     },
 
     async selectKelas(value){
+        this.loading(true);
         this.class_name = value.name;
-        this.loading();
-        await this.fetchData().then(result=>{
-            this.loading();
-        });
+        await this.fetchData();
+        this.loading(false);
     },
 
     async removeKelas(){
+        this.loading(true);
         this.class_name = "";
-        this.loading();
-        await this.fetchData().then(result=>{
-            this.loading();
-        });
+        await this.fetchData();
+        this.loading(false);
     },
 
     async selectCourse(value){
+        this.loading(true);
         this.isCourseSelected = true;
         this.course_code = value.code;
         this.course_name = value.name;
-        this.loading();
-        await this.fetchData().then(result=>{
-            this.loading();
-        });
+        await this.fetchData();
+        this.loading(false);
     },
 
     async removeCourse(){
+        this.loading(true);
         this.isCourseSelected = false;
         this.course_code = "";
         this.course_name = "";
-        this.loading();
-        await this.fetchData().then(result=>{
-            this.loading();
-        });
+        await this.fetchData();
+        this.loading(false);
     },
 
     async onClickEdit(data){
@@ -381,22 +390,28 @@ export default {
             .then(response => {
               this.submitted = false;
               this.hideModal();
-              Swal.fire("Edited!", this.dataEditDetail.nim + " has been edited.", "success");
-              this.loading();
-              this.fetchData().then(result=>{
-                  this.loading();
-              });
+              Swal.fire("Berhasil diubah!", this.dataEditDetail.nim + " telah terubah.", "success");
+              this.loading(true);
+              this.fetchData();
+              this.loading(false);
             })
             .catch(error => {
               this.submitted = false;
               this.hideModal();
 
-              Swal.fire({
-                icon: 'error',
-                title: 'Oops...',
-                text: 'Terjadi kesalahan!',
-                footer: error
-              })
+              if(error.response.status == 401){
+                this.$router.replace({
+                    name: 'login', params: { tokenExpired: true }
+                });
+              }
+              else{
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Oops...',
+                    text: 'Terjadi kesalahan!',
+                    footer: error.response.data.message
+                })
+              }
             })
         )
       }
@@ -411,12 +426,19 @@ export default {
               }
             })
             .catch(error => {
-              Swal.fire({
-                  icon: 'error',
-                  title: 'Oops...',
-                  text: 'Terjadi kesalahan!',
-                  footer: error
-              })
+              if(error.response.status == 401){
+                this.$router.replace({
+                    name: 'login', params: { tokenExpired: true }
+                });
+              }
+              else{
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Oops...',
+                    text: 'Terjadi kesalahan!',
+                    footer: error.response.data.message
+                })
+              }
             })
         )
     },
@@ -454,22 +476,28 @@ export default {
             .then(response => {
               this.submitted = false;
               this.hideModal();
-              Swal.fire("Edited!", this.dataEditRole.no_induk + " has been edited.", "success");
-              this.loading();
-              this.fetchData().then(result=>{
-                  this.loading();
-              });
+              Swal.fire("Berhasil diubah!", this.dataEditRole.no_induk + " telah terubah.", "success");
+              this.loading(true);
+              this.fetchData();
+              this.loading(false);
             })
             .catch(error => {
               this.submitted = false;
               this.hideModal();
               
-              Swal.fire({
-                icon: 'error',
-                title: 'Oops...',
-                text: 'Terjadi kesalahan!',
-                footer: error
-              })
+              if(error.response.status == 401){
+                this.$router.replace({
+                    name: 'login', params: { tokenExpired: true }
+                });
+              }
+              else{
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Oops...',
+                    text: 'Terjadi kesalahan!',
+                    footer: error.response.data.message
+                })
+              }
             })
         )
     },
@@ -484,19 +512,16 @@ export default {
       this.$bvModal.hide('modal-edit');
     },
 
-    loading() {
-      if(this.isLoading){
-        this.isLoading = false;
-      } else{
-        this.isLoading = true;
-      }
+    loading(isLoad) {
+        var x = document.getElementById("loading");
 
-      var x = document.getElementById("loading");
-      if (x.style.display === "none") {
-        x.style.display = "block";
-      } else {
-        x.style.display = "none";
-      }
+        if(isLoad){
+            this.isLoading = true;
+            x.style.display = "block";
+        } else{
+            this.isLoading = false;
+            x.style.display = "none";
+        }
     },
   }
 };
@@ -504,8 +529,16 @@ export default {
 
 <template>
   <div>
-    <div id="loading" style="display:none; z-index:100; position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%);">
-      <b-spinner style="width: 3rem; height: 3rem;" class="m-2" variant="warning" role="status"></b-spinner>
+    <div
+      id="loading"
+      style="display:none; z-index:100; position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%);"
+    >
+      <b-spinner
+        style="width: 3rem; height: 3rem;"
+        class="m-2"
+        variant="warning"
+        role="status"
+      />
     </div>
     <div class="row mt-4">
       <div class="col-sm-12 col-md-12">
@@ -517,46 +550,47 @@ export default {
         <div class="col-sm-12 col-md-3">
           <div class="form-group">
             <multiselect
-                placeholder="Kelas"
-                v-model="class_data"
-                :options="dataDropdown.classes"
-                label="name"
-                track-by="name"
-                @select="selectKelas"
-                @remove="removeKelas"
-                :show-labels="false"
-            ></multiselect>
+              v-model="class_data"
+              placeholder="Kelas"
+              :options="dataDropdown.classes"
+              label="name"
+              track-by="name"
+              :show-labels="false"
+              @select="selectKelas"
+              @remove="removeKelas"
+            />
           </div>
         </div>
         <div class="col-sm-12 col-md-4">
           <div class="form-group">
             <multiselect
-                placeholder="Mata Kuliah"
-                v-model="course_data"
-                :options="dataDropdown.courses"
-                label="name"
-                track-by="name"
-                @select="selectCourse"
-                @remove="removeCourse"
-                :show-labels="false"
-            ></multiselect>
+              v-model="course_data"
+              placeholder="Mata Kuliah"
+              :options="dataDropdown.courses"
+              label="name"
+              track-by="name"
+              :show-labels="false"
+              @select="selectCourse"
+              @remove="removeCourse"
+            />
           </div>
         </div>
         <div class="col-sm-12 col-md-2">
           <div class="form-group">
             <input
-                v-if="isCourseSelected"
-                v-model="course_code"
-                :disabled="true"
-                class="form-control text-center"
-                type="text"
-                style="background-color: #F0F4F6;"
+              v-if="isCourseSelected"
+              v-model="course_code"
+              :disabled="true"
+              class="form-control text-center"
+              type="text"
+              style="background-color: #F0F4F6;"
             >
           </div>
         </div>
       </div>
     </div>
-    <hr style="margin-left: -28px; 
+    <hr
+      style="margin-left: -28px; 
                 margin-right: -28px; 
                 height: 2px; 
                 background-color: #eee; 
@@ -565,29 +599,35 @@ export default {
     >
     <div class="row mt-4">
       <div class="col-sm-12 col-md-6">
-        <div id="tickets-table_length" class="dataTables_length">
+        <div
+          id="tickets-table_length"
+          class="dataTables_length"
+        >
           <label class="d-inline-flex align-items-center">
             Show&nbsp;
             <b-form-select 
-            v-model="perPage" 
-            size="sm" 
-            :options="pageOptions"
-            @change="handlePageSizeChange"
-            ></b-form-select>&nbsp;entries
+              v-model="perPage" 
+              size="sm" 
+              :options="pageOptions"
+              @change="handlePageSizeChange"
+            />&nbsp;entries
           </label>
         </div>
       </div>
       <!-- Search -->
       <div class="col-sm-12 col-md-6">
-        <div id="tickets-table_filter" class="dataTables_filter text-md-right">
+        <div
+          id="tickets-table_filter"
+          class="dataTables_filter text-md-right"
+        >
           <label class="d-inline-flex align-items-center">
             Search:
             <b-form-input
               v-model="filter"
-              @input="handleSearch"
               type="search"
               class="form-control form-control-sm ml-2"
-            ></b-form-input>
+              @input="handleSearch"
+            />
           </label>
         </div>
       </div>
@@ -603,92 +643,107 @@ export default {
         :per-page="0"
         :busy.sync="isFetchingData"
         :current-page="currentPage"
-        @sort-changed="handleSortingChange"
         :sort-by="sortBy"
         :sort-desc="sortDesc"
         :filter-included-fields="filterOn"
+        :head-variant="'dark'"
+        @sort-changed="handleSortingChange"
         @filtered="onFiltered"
-        :headVariant="'dark'"
       >
         <template v-slot:cell(action)="data">
           <!-- <a
             href="javascript:void(0);"
             @click=onClickEdit(data)
-            class="mr-3 text-primary"
+            class="m-1 text-primary"
             v-b-tooltip.hover
             title="Edit"
           >
             <i class="mdi mdi-pencil font-size-18"></i>
           </a> -->
           <a
-            href="javascript:void(0);"
-            @click=onClickDelete(data)
-            class="text-danger"
             v-b-tooltip.hover
+            href="javascript:void(0);"
+            class="m-1 text-danger"
             title="Delete"
+            @click="onClickDelete(data)"
           >
-            <i class="mdi mdi-trash-can font-size-18"></i>
+            <i class="mdi mdi-trash-can font-size-18" />
           </a>
         </template>
       </b-table>
     </div>
     <div class="row">
       <div class="col">
-        <div class="dataTables_paginate paging_simple_numbers float-right">
+        <div class="paging_simple_numbers float-right">
           <ul class="pagination pagination-rounded mb-0">
             <!-- pagination -->
             <b-pagination 
-            v-model="currentPage" 
-            :total-rows="rows" 
-            :per-page="perPage"
-            @input="handlePageChange"
-            ></b-pagination>
+              v-model="currentPage" 
+              :total-rows="rows" 
+              :per-page="perPage"
+              @input="handlePageChange"
+            />
           </ul>
         </div>
       </div>
     </div>
     <div name="modalEdit">
       <b-modal 
-        size="lg" 
         id="modal-edit" 
+        size="lg" 
         title="Edit Student" 
         hide-footer 
         title-class="font-18"
       >
         <div class="col-sm-12">
-            <div class="form-group col-sm-12">
-                <label for="nim">NIM</label>
-                <input 
-                style="background-color: #F0F4F6;"
-                :disabled="true"
-                v-model="dataEditDetail.nim"
-                id="nip" 
-                name="nip" 
-                type="number" 
-                class="form-control"/>
-            </div>
+          <div class="form-group col-sm-12">
+            <label for="nim">NIM</label>
+            <input 
+              id="nip"
+              v-model="dataEditDetail.nim"
+              style="background-color: #F0F4F6;"
+              :disabled="true" 
+              name="nip" 
+              type="number" 
+              class="form-control"
+            >
+          </div>
         </div>
-        <form class="form-horizontal col-sm-12 col-md-12" @submit.prevent="editRole">
-          <div class="tab-pane" id="metadata">
-              <div class="col-sm-12">
-                  <div class="form-group">
-                      <label class="control-label">Roles</label>
-                      <multiselect
-                          v-model="role_data"
-                          :options="roleData"
-                          :multiple="true"
-                          @remove="removeRole"
-                          :show-labels="false"
-                      ></multiselect>
-                  </div>
+        <form
+          class="form-horizontal col-sm-12 col-md-12"
+          @submit.prevent="editRole"
+        >
+          <div
+            id="metadata"
+            class="tab-pane"
+          >
+            <div class="col-sm-12">
+              <div class="form-group">
+                <label class="control-label">Roles</label>
+                <multiselect
+                  v-model="role_data"
+                  :options="roleData"
+                  :multiple="true"
+                  :show-labels="false"
+                  @remove="removeRole"
+                />
               </div>
-              <div class="text-center mt-4">
-                  <button
-                  type="submit"
-                  class="btn btn-primary mr-2 waves-effect waves-light"
-                  >Simpan</button>
-                  <button type="button" @click="hideModal" class="btn btn-light waves-effect">Batalkan</button>
-              </div>
+            </div>
+            <div class="text-center mt-4">
+              <button
+                type="submit"
+                class="btn btn-primary mr-2 waves-effect waves-light"
+              >
+                Simpan
+              </button>
+              <button
+                type="button"
+                class="btn btn-light waves-effect"
+                @click="hideModal"
+              >
+                Batalkan
+              </button>
+            </div>
           </div>
         </form>
       </b-modal>

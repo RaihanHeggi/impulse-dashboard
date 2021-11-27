@@ -272,3 +272,12 @@ export function inputBap(schedule_id, data){
 export function resetUserPassword(user_id) {
     return httpAxios.get(`/laboran/user/reset/${user_id}`);
 }
+export function getAllAccounts(params) {
+    return httpAxios.get('/laboran/user', { params })
+}
+export function logoutAccount(id){
+    return httpAxios({
+        url: `/laboran/user/logout/${id}`,
+        method: 'POST',
+    })
+}
