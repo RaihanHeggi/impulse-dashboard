@@ -23,9 +23,6 @@ export default {
       course_name: { required },
     },
   },
-  created() {
-    document.body.classList.add("auth-body-bg");
-  },
   data() {
     return {
       //list students
@@ -49,7 +46,7 @@ export default {
         { key: "class_course.staffs.code", sortable: false, label: "Kode Dosen" },
         { key: "class_course.academic_years.semester", sortable: false, label: "Semester" },
         { key: "class_course.academic_years.year", sortable: false, label: "Tahun Akademik" },
-        { key: "action", sortable: false, thClass: 'text-center', tdClass: 'text-center', }
+        { key: "action", label: "Aksi", sortable: false, thClass: 'text-center', tdClass: 'text-center', }
       ],
 
       class_name: "",
@@ -82,14 +79,15 @@ export default {
         return this.courseData;
     }
   },
+  created() {
+    document.body.classList.add("auth-body-bg");
+  },
   mounted: async function() {
     // Set the initial number of items
-    this.loading();
-    await this.fetchData().then(result=>{
-        this.loading();
-    });
-
+    this.loading(true);
+    await this.fetchData();
     this.loadDataDropdown();
+    this.loading(false);
   },
   methods: {
     ...notificationMethods,
@@ -160,31 +158,36 @@ export default {
           .catch(error => {
             this.isFetchingData = false;
             
-            Swal.fire({
-                icon: 'error',
-                title: 'Oops...',
-                text: 'Terjadi kesalahan!',
-                footer: error
-            })
+            if(error.response.status == 401){
+              this.$router.replace({
+                  name: 'login', params: { tokenExpired: true }
+              });
+            }
+            else{
+              Swal.fire({
+                  icon: 'error',
+                  title: 'Oops...',
+                  text: 'Terjadi kesalahan!',
+                  footer: error.response.data.message
+              })
+            }
           })
       )
     },
 
     async handlePageChange(value) {
+      this.loading(true);
       this.currentPage = value;
-      this.loading();
-      await this.fetchData().then(result=>{
-          this.loading();
-      });
+      await this.fetchData();
+      this.loading(false);
     },
 
     async handlePageSizeChange(value) {
+      this.loading(true);
       this.perPage = value;
       this.currentPage = 1;
-      this.loading();
-      await this.fetchData().then(result=>{
-          this.loading();
-      });
+      await this.fetchData();
+      this.loading(false);
     },
 
     // async handleSortingChange(value){
@@ -215,10 +218,9 @@ export default {
     // },
 
     async refreshData(){
-      this.loading();
-      await this.fetchData().then(result=>{
-          this.loading();
-      });
+      this.loading(true);
+      await this.fetchData();
+      this.loading(false);
     },
 
     onClickDelete(data){
@@ -242,18 +244,24 @@ export default {
         api.deleteAsprakClass(id)
           .then(response => {
             Swal.fire("Berhasil dihapus!", nim + " telah terhapus.", "success");
-            this.loading();
-            this.fetchData().then(result=>{
-                this.loading();
-            });
+            this.loading(true);
+            this.fetchData();
+            this.loading(false);
           })
           .catch(error => {
-            Swal.fire({
-              icon: 'error',
-              title: 'Oops...',
-              text: 'Terjadi kesalahan!',
-              footer: error
-            })
+            if(error.response.status == 401){
+              this.$router.replace({
+                  name: 'login', params: { tokenExpired: true }
+              });
+            }
+            else{
+              Swal.fire({
+                  icon: 'error',
+                  title: 'Oops...',
+                  text: 'Terjadi kesalahan!',
+                  footer: error.response.data.message
+              })
+            }
           })
       )
     },
@@ -271,12 +279,19 @@ export default {
                 }
             })
             .catch(error => {
-                Swal.fire({
-                    icon: 'error',
-                    title: 'Oops...',
-                    text: 'Terjadi kesalahan!',
-                    footer: error
-                })
+                if(error.response.status == 401){
+                  this.$router.replace({
+                      name: 'login', params: { tokenExpired: true }
+                  });
+                }
+                else{
+                  Swal.fire({
+                      icon: 'error',
+                      title: 'Oops...',
+                      text: 'Terjadi kesalahan!',
+                      footer: error.response.data.message
+                  })
+                }
             })
         )
     },
@@ -289,54 +304,47 @@ export default {
     },
 
     async selectKelas(value){
+        this.loading(true);
         this.class_name = value.name;
-        this.loading();
-        await this.fetchData().then(result=>{
-            this.loading();
-        });
+        await this.fetchData();
+        this.loading(false);
     },
 
     async removeKelas(){
+        this.loading(true);
         this.class_name = "";
-        this.loading();
-        await this.fetchData().then(result=>{
-            this.loading();
-        });
+        await this.fetchData();
+        this.loading(false);
     },
 
     async selectCourse(value){
+        this.loading(true);
         this.course_name = value.name;
-        this.loading();
-        await this.fetchData().then(result=>{
-            this.loading();
-        });
+        await this.fetchData();
+        this.loading(false);
     },
 
     async removeCourse(){
+        this.loading(true);
         this.course_name = "";
-        this.loading();
-        await this.fetchData().then(result=>{
-            this.loading();
-        });
+        await this.fetchData();
+        this.loading(false);
     },
 
     hideModal(){
       this.$bvModal.hide('modal-edit');
     },
 
-    loading() {
-      if(this.isLoading){
-        this.isLoading = false;
-      } else{
-        this.isLoading = true;
-      }
+    loading(isLoad) {
+        var x = document.getElementById("loading");
 
-      var x = document.getElementById("loading");
-      if (x.style.display === "none") {
-        x.style.display = "block";
-      } else {
-        x.style.display = "none";
-      }
+        if(isLoad){
+            this.isLoading = true;
+            x.style.display = "block";
+        } else{
+            this.isLoading = false;
+            x.style.display = "none";
+        }
     },
   }
 };
@@ -344,8 +352,16 @@ export default {
 
 <template>
   <div>
-    <div id="loading" style="display:none; z-index:100; position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%);">
-      <b-spinner style="width: 3rem; height: 3rem;" class="m-2" variant="warning" role="status"></b-spinner>
+    <div
+      id="loading"
+      style="display:none; z-index:100; position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%);"
+    >
+      <b-spinner
+        style="width: 3rem; height: 3rem;"
+        class="m-2"
+        variant="warning"
+        role="status"
+      />
     </div>
     <!-- <div class="row mt-4">
       <div class="col-sm-12 col-md-12">
@@ -386,15 +402,18 @@ export default {
     </div> -->
     <div class="row mt-4">
       <div class="col-sm-12 col-md-6">
-        <div id="tickets-table_length" class="dataTables_length">
+        <div
+          id="tickets-table_length"
+          class="dataTables_length"
+        >
           <label class="d-inline-flex align-items-center">
             Show&nbsp;
             <b-form-select 
-            v-model="perPage" 
-            size="sm" 
-            :options="pageOptions"
-            @change="handlePageSizeChange"
-            ></b-form-select>&nbsp;entries
+              v-model="perPage" 
+              size="sm" 
+              :options="pageOptions"
+              @change="handlePageSizeChange"
+            />&nbsp;entries
           </label>
         </div>
       </div>
@@ -427,33 +446,33 @@ export default {
         :sort-by="sortBy"
         :sort-desc="sortDesc"
         :filter-included-fields="filterOn"
+        :head-variant="'dark'"
         @filtered="onFiltered"
-        :headVariant="'dark'"
       >
         <template v-slot:cell(action)="data">
           <a
-            href="javascript:void(0);"
-            @click=onClickDelete(data)
-            class="text-danger"
             v-b-tooltip.hover
+            href="javascript:void(0);"
+            class="m-1 text-danger"
             title="Delete"
+            @click="onClickDelete(data)"
           >
-            <i class="mdi mdi-trash-can font-size-18"></i>
+            <i class="mdi mdi-trash-can font-size-18" />
           </a>
         </template>
       </b-table>
     </div>
     <div class="row">
       <div class="col">
-        <div class="dataTables_paginate paging_simple_numbers float-right">
+        <div class="paging_simple_numbers float-right">
           <ul class="pagination pagination-rounded mb-0">
             <!-- pagination -->
             <b-pagination 
-            v-model="currentPage" 
-            :total-rows="rows" 
-            :per-page="perPage"
-            @input="handlePageChange"
-            ></b-pagination>
+              v-model="currentPage" 
+              :total-rows="rows" 
+              :per-page="perPage"
+              @input="handlePageChange"
+            />
           </ul>
         </div>
       </div>
