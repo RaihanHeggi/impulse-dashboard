@@ -1,5 +1,14 @@
 # impulse-dashboard
 
+## Installation
+```
+Inside terminal:
+- yarn install
+- copy .env.example .env
+--- change your VUE_APP_BACKEND_URL
+- yarn serve
+```
+
 ## Project setup
 ```
 yarn install

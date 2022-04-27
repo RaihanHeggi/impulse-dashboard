@@ -3,11 +3,9 @@ import Layout from "../../layouts/main";
 import PageHeader from "@/components/page-header";
 import Multiselect from "vue-multiselect";
 import DatePicker from "vue2-datepicker";
-
 import * as api from '@/api';
 import Swal from "sweetalert2";
 import moment from 'moment';
-
 import { required } from "vuelidate/lib/validators";
 import { notificationMethods } from "@/state/helpers";
 
@@ -132,7 +130,7 @@ export default {
         msteam_code: "MS Teams Code",
         tanggal: "Tanggal",
         mulai: "Jam Mulai",
-        terakhir: "Jam Terakhir",
+        terakhir: "Jam Berakhir",
       },
 
       //data module
@@ -922,7 +920,7 @@ export default {
 
     dateFormatted(date){
       if(date){
-        return moment(date).locale('id').format('LL');
+        return moment(date).format('LL');
       }
       else{
         return "-";

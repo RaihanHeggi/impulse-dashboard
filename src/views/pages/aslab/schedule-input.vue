@@ -3,14 +3,11 @@ import DatePicker from "vue2-datepicker";
 import Layout from "../../layouts/main";
 import PageHeader from "@/components/page-header";
 import Multiselect from "vue-multiselect";
-
 import * as api from '@/api';
 import Swal from "sweetalert2";
 import moment from 'moment';
-
 import { required } from "vuelidate/lib/validators";
 import { notificationMethods } from "@/state/helpers";
-import tableRoomVue from '../laboran/room/table-room.vue';
 
 /**
  * Advanced-form component
@@ -685,7 +682,7 @@ export default {
               </div>
               
               <div class="form-group col-sm-4">
-                <label>Jam Terakhir</label>
+                <label>Jam Berakhir</label>
                 <br>
                 <date-picker
                   v-model="time_end"
@@ -700,7 +697,7 @@ export default {
                   v-if="submitted && !$v.time_end.required"
                   class="invalid-feedback"
                 >
-                  Jam Terakhir harus diisi!
+                  Jam Berakhir harus diisi!
                 </div>
               </div>
             </div>

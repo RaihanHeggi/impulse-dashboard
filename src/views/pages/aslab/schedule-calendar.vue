@@ -5,14 +5,12 @@ import timeGridPlugin from "@fullcalendar/timegrid";
 import interactionPlugin from "@fullcalendar/interaction";
 import bootstrapPlugin from "@fullcalendar/bootstrap";
 import listPlugin from "@fullcalendar/list";
-import idLocale from "@fullcalendar/core/locales/id";
-
+import allLocales from '@fullcalendar/core/locales-all';
 import * as api from '@/api';
 import Swal from "sweetalert2";
-
+import store from '@/store';
 import Layout from "../../layouts/main";
 import PageHeader from "@/components/page-header";
-
 import moment from 'moment';
 import Multiselect from "vue-multiselect";
 
@@ -42,6 +40,7 @@ export default {
           active: true,
         }
       ],
+      // current_language: store.getters.getAppLanguage,
       //list schedule
       isFetchingData: false,
       dataSchedules: [],
@@ -134,7 +133,8 @@ export default {
         selectable: true,
         selectMirror: true,
         dayMaxEvents: true,
-        locale: idLocale,
+        locales: allLocales,
+        locale: 'id',
         dayHeaderFormat: { weekday: 'long' },
       },
       currentEvents: [],
@@ -150,6 +150,12 @@ export default {
     notification() {
       return this.$store ? this.$store.state.notification : null;
     },
+    current_language() {
+      let locale = store.getters.getAppLanguage
+      // moment.locale(String(locale))
+      // moment().locale()
+      return locale
+    }
   },
   mounted: async function() {
     this.loading(true);
@@ -234,6 +240,7 @@ export default {
       await this.getSchedules();
       //await sleep(1000);
       this.calendarOptions.events = this.datas;
+      this.calendarOptions.locale = String(this.current_language);
       this.isFetchingData = false;
     },
 
@@ -401,7 +408,7 @@ export default {
 
     dateFormatted(date){
       if(date){
-        return moment(date).locale('id').format('LL');
+        return moment(date).format('LL');
       }
       else{
         return "-";
@@ -410,7 +417,7 @@ export default {
 
     timeFormatted(date){
       if(date){
-        return moment(date).locale('id').format('LT');
+        return moment(date).format('LT');
       }
       else{
         return "-";
@@ -661,7 +668,7 @@ function sleep(ms) {
           </div>
           <div class="col-sm-6">
             <div class="form-group">
-              <label>Jam Terakhir</label>
+              <label>Jam Berakhir</label>
               <input
                 v-model="schedule_data.end"
                 type="text"
